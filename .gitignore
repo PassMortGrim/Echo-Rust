@@ -1,3 +1,4 @@
 .env
 config.toml
-echo_vectors.dbtarget/
+echo_vectors.db
+target/
