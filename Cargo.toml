@@ -1,0 +1,68 @@
+[package]
+name        = "echo-rust"
+version     = "0.2.0"
+edition     = "2021"
+description = "High-Performance Automated Bug Reproduction Agent"
+authors     = ["PASS Team"]
+license     = "MIT"
+
+[dependencies]
+# ── Runtime asynchrone ──────────────────────────────────
+tokio       = { version = "1.38",  features = ["full"] }
+futures     = "0.3"
+async-trait = "0.1"
+
+# ── Sérialisation & Configuration ──────────────────────
+serde      = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml       = "0.8"
+figment    = { version = "0.10", features = ["toml", "env"] }
+
+# ── Gestion d'erreurs ──────────────────────────────────
+anyhow    = "1"
+thiserror = "1"
+
+# ── Logging ─────────────────────────────────────────────
+tracing            = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+
+# ── Système d'acteurs (multi-agents) ───────────────────
+ractor = { version = "0.10", features = ["tokio_runtime"] }
+
+# ── Infrastructure ──────────────────────────────────────
+bollard = "0.16"                                        # Docker API
+neo4rs  = "0.7"                                         # Neo4j
+git2    = "0.18"                                        # Git natif
+reqwest = { version = "0.12", features = ["json", "stream"] }
+
+# ── Parsing AST ─────────────────────────────────────────
+tree-sitter            = "0.22"
+tree-sitter-python     = "0.21"
+tree-sitter-javascript = "0.21"
+tree-sitter-rust       = "0.21"
+
+# ── Graphe & Vector DB ─────────────────────────────────
+petgraph      = "0.6"
+qdrant-client = "1.10"
+sqlite        = "0.36"
+sqlite-vec    = "0.1"
+
+# ── Sandbox WebAssembly ────────────────────────────────
+wasmtime      = "19"
+wasmtime-wasi = "19"
+
+# ── TUI (Terminal User Interface) ──────────────────────
+ratatui   = "0.26"
+crossterm = "0.27"
+
+# ── Utilitaires ─────────────────────────────────────────
+uuid      = { version = "1", features = ["v4"] }
+chrono    = { version = "0.4", features = ["serde"] }
+regex     = "1"
+base64    = "0.22"
+
+[profile.release]
+opt-level    = 3
+lto          = true
+codegen-units = 1
+strip        = true

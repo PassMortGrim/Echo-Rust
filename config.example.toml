@@ -1,0 +1,49 @@
+# ═══════════════════════════════════════════
+#  Echo-Rust — Example configuration
+#  Copy this file to config.toml and
+#  fill in the sensitive values.
+///
+#  Echo-Rust — Configuration d'exemple
+#  Copiez ce fichier vers config.toml et
+#  remplissez les valeurs sensibles.
+# ═══════════════════════════════════════════
+
+[neo4j]
+uri      = "bolt://localhost:7687"
+user     = "neo4j"
+password = "change_me"
+
+[docker]
+sandbox_image = "python:3.11-slim"
+network_mode  = "none"
+memory_limit  = "512m"
+cpu_limit     = 1.0
+
+[wasm]
+enabled    = true
+max_memory = 536870912      # 512 MB
+timeout_ms = 30000
+
+[llm]
+api_key     = "sk-..."
+base_url    = "https://api.openai.com/v1"
+model       = "gpt-4-turbo-preview"
+temperature = 0.2
+max_tokens  = 4096
+
+[vector_db]
+backend       = "sqlite"    # "qdrant" | "sqlite"
+qdrant_url    = "http://localhost:6333"
+sqlite_path   = "echo_vectors.db"
+embedding_dim = 1536
+
+[sandbox]
+mode            = "wasm"    # "wasm" | "docker"
+max_retries     = 3
+timeout_seconds = 60
+
+[agent]
+max_iterations      = 5
+enable_self_healing = true
+enable_hybrid_rag   = true
+parallel_workers    = 4

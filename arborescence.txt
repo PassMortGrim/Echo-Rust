@@ -1,0 +1,23 @@
+echo-rust/
+├── Cargo.toml (1544 bytes)
+├── config.example.toml (704 bytes)
+└── src/
+    ├── main.rs (4634 bytes)
+    ├── config.rs (3457 bytes)
+    ├── actors/
+    │   ├── mod.rs
+    │   ├── git_actor.rs (1770 bytes)
+    │   ├── ast_actor.rs (4266 bytes)
+    │   ├── llm_actor.rs (3981 bytes)
+    │   └── sandbox_actor.rs (5398 bytes)
+    ├── services/
+    │   ├── mod.rs
+    │   ├── graph_service.rs (1729 bytes)
+    │   ├── vector_store.rs (481 bytes)
+    │   └── tool_executor.rs (1088 bytes)
+    ├── state/
+    │   ├── mod.rs
+    │   └── graph.rs (2716 bytes)
+    └── tui/
+        ├── mod.rs
+        └── app.rs (2291 bytes)
