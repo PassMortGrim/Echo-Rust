@@ -1,8 +1,8 @@
-ï»¿# Echo-Rust
+# Echo-Rust
 
-**Echo-Rust** is an automated bug-reproduction agent written in Rust â€” a from-scratch rewrite of the original *Echo* Python agent.
+**Echo-Rust** is an automated bug-reproduction agent written in Rust — a from-scratch rewrite of the original *Echo* Python agent.
 
-> âš ï¸ **Status: working prototype.** The CLI pipeline starts and produces a reproduction script; full integration of actors, RAG and real sandboxes is still under development.
+> ?? **Status: working prototype.** The CLI pipeline starts and produces a reproduction script; full integration of actors, RAG and real sandboxes is still under development.
 
 ## Overview
 
@@ -23,16 +23,16 @@ Echo-Rust analyzes a GitHub repository, builds an AST-based knowledge graph, ret
 
 ```text
 main.rs
- â””â”€â”€ Workflow
-      â”œâ”€â”€ GitActor       â†’ cloning / repository access
-      â”œâ”€â”€ AstActor       â†’ Tree-sitter parsing and code graph
-      â”œâ”€â”€ LlmActor       â†’ generation via LLM API
-      â””â”€â”€ SandboxActor   â†’ Wasm or Docker execution
+ +-- Workflow
+      +-- GitActor       ? cloning / repository access
+      +-- AstActor       ? Tree-sitter parsing and code graph
+      +-- LlmActor       ? generation via LLM API
+      +-- SandboxActor   ? Wasm or Docker execution
 
 Services
- â”œâ”€â”€ GraphService   â†’ Neo4j / in-memory graph
- â”œâ”€â”€ VectorStore    â†’ Qdrant / SQLite-Vec
- â””â”€â”€ ToolExecutor   â†’ read, search and execution tools
+ +-- GraphService   ? Neo4j / in-memory graph
+ +-- VectorStore    ? Qdrant / SQLite-Vec
+ +-- ToolExecutor   ? read, search and execution tools
 ```
 
 ## Prerequisites
@@ -46,7 +46,7 @@ On Windows with the `x86_64-pc-windows-msvc` target, native dependencies may req
 ## Installation
 
 ```bash
-git clone https://github.com/cedric626/Echo-Rust.git
+git clone https://github.com/PassMortGrim/Echo-Rust.git
 cd Echo-Rust
 cp config.example.toml config.toml
 ./check_prerequis_echo_rust.sh
@@ -56,7 +56,7 @@ cargo run --release
 Windows (PowerShell):
 
 ```powershell
-git clone https://github.com/cedric626/Echo-Rust.git
+git clone https://github.com/PassMortGrim/Echo-Rust.git
 cd Echo-Rust
 Copy-Item config.example.toml config.toml
 .\check_prerequis_echo_rust.ps1
@@ -74,11 +74,11 @@ $env:ECHO_VECTOR_DB__BACKEND = "sqlite"
 cargo run --release
 ```
 
-> ðŸ” Never commit `config.toml`, `.env` or any API key. Use `config.example.toml` as a template.
+> ?? Never commit `config.toml`, `.env` or any API key. Use `config.example.toml` as a template.
 
 ## Usage
 
-CLI mode (repository URL as argument â€” handy to test several repos):
+CLI mode (repository URL as argument — handy to test several repos):
 
 ```powershell
 cargo run --release -- https://github.com/user/repo.git "Error during OAuth authentication"
@@ -138,39 +138,39 @@ Before submitting: `cargo fmt && cargo clippy && cargo test`.
 
 ///
 
-# Echo-Rust (FranÃ§ais)
+# Echo-Rust (Français)
 
-**Echo-Rust** est un agent Rust de reproduction automatisÃ©e de bugs â€” rÃ©Ã©criture complÃ¨te de l'agent *Echo* original en Python.
+**Echo-Rust** est un agent Rust de reproduction automatisée de bugs — réécriture complète de l'agent *Echo* original en Python.
 
-> âš ï¸ **Statut : prototype fonctionnel.** Le pipeline CLI dÃ©marre et produit un script de reproduction ; l'intÃ©gration complÃ¨te des acteurs, du RAG et des sandbox rÃ©els est en cours.
+> ?? **Statut : prototype fonctionnel.** Le pipeline CLI démarre et produit un script de reproduction ; l'intégration complète des acteurs, du RAG et des sandbox réels est en cours.
 
-## AperÃ§u
+## Aperçu
 
-Echo-Rust analyse un dÃ©pÃ´t GitHub, construit un graphe de connaissances Ã  partir de l'AST, recherche le contexte pertinent, gÃ©nÃ¨re un script de reproduction du bug via un LLM, puis l'exÃ©cute dans un sandbox isolÃ© (WebAssembly, avec repli Docker).
+Echo-Rust analyse un dépôt GitHub, construit un graphe de connaissances à partir de l'AST, recherche le contexte pertinent, génère un script de reproduction du bug via un LLM, puis l'exécute dans un sandbox isolé (WebAssembly, avec repli Docker).
 
-## FonctionnalitÃ©s
+## Fonctionnalités
 
-- **Architecture multi-agents** basÃ©e sur [Ractor](https://docs.rs/ractor) : `GitActor`, `AstActor`, `LlmActor` et `SandboxActor` communiquent par messages asynchrones.
-- **Pipeline de reproduction** : initialisation, clonage, analyse AST, construction de graphe, recherche RAG, gÃ©nÃ©ration, exÃ©cution.
+- **Architecture multi-agents** basée sur [Ractor](https://docs.rs/ractor) : `GitActor`, `AstActor`, `LlmActor` et `SandboxActor` communiquent par messages asynchrones.
+- **Pipeline de reproduction** : initialisation, clonage, analyse AST, construction de graphe, recherche RAG, génération, exécution.
 - **Analyse AST** avec Tree-sitter pour Python, JavaScript/TypeScript et Rust.
-- **Graphe de connaissances** en mÃ©moire via `petgraph`, avec option Neo4j persistant.
-- **Recherche hybride** graphe + vecteurs : SQLite-Vec (embarquÃ©) ou Qdrant (serveur).
-- **Sandbox Wasmtime** pour l'exÃ©cution isolÃ©e, avec mode Docker de secours via Bollard.
+- **Graphe de connaissances** en mémoire via `petgraph`, avec option Neo4j persistant.
+- **Recherche hybride** graphe + vecteurs : SQLite-Vec (embarqué) ou Qdrant (serveur).
+- **Sandbox Wasmtime** pour l'exécution isolée, avec mode Docker de secours via Bollard.
 - **TUI** (Ratatui/Crossterm) activable avec `ECHO_TUI=true`.
 - **Configuration flexible** par `config.toml` et variables `ECHO_*`.
 
-## PrÃ©requis
+## Prérequis
 
 - Rust 1.75+, Cargo, Git
 - Docker (uniquement pour le mode sandbox `docker`)
 - Neo4j et Qdrant (facultatifs, replis inclus)
 
-Sous Windows avec la cible `x86_64-pc-windows-msvc`, les dÃ©pendances natives peuvent nÃ©cessiter Visual Studio Build Tools / MSVC, CMake et NASM.
+Sous Windows avec la cible `x86_64-pc-windows-msvc`, les dépendances natives peuvent nécessiter Visual Studio Build Tools / MSVC, CMake et NASM.
 
 ## Installation
 
 ```powershell
-git clone https://github.com/cedric626/Echo-Rust.git
+git clone https://github.com/PassMortGrim/Echo-Rust.git
 cd Echo-Rust
 Copy-Item config.example.toml config.toml
 .\check_prerequis_echo_rust.ps1
@@ -180,7 +180,7 @@ cargo run --release
 Linux/macOS :
 
 ```bash
-git clone https://github.com/cedric626/Echo-Rust.git
+git clone https://github.com/PassMortGrim/Echo-Rust.git
 cd Echo-Rust
 cp config.example.toml config.toml
 ./check_prerequis_echo_rust.sh
@@ -189,7 +189,7 @@ cargo run --release
 
 ## Configuration
 
-Echo-Rust charge d'abord `config.toml`, puis applique les variables `ECHO_*` (sÃ©parateur de sections : `__`). Voir [`config.example.toml`](config.example.toml) pour un exemple complet annotÃ©.
+Echo-Rust charge d'abord `config.toml`, puis applique les variables `ECHO_*` (séparateur de sections : `__`). Voir [`config.example.toml`](config.example.toml) pour un exemple complet annoté.
 
 ```powershell
 $env:ECHO_LLM__API_KEY = "sk-..."
@@ -198,11 +198,11 @@ $env:ECHO_VECTOR_DB__BACKEND = "sqlite"
 cargo run --release
 ```
 
-> ðŸ” Ne jamais commiter `config.toml`, `.env` ou une clÃ© API. Utilisez `config.example.toml` comme modÃ¨le.
+> ?? Ne jamais commiter `config.toml`, `.env` ou une clé API. Utilisez `config.example.toml` comme modèle.
 
 ## Utilisation
 
-Mode CLI (URL en argument â€” pratique pour tester plusieurs dÃ©pÃ´ts) :
+Mode CLI (URL en argument — pratique pour tester plusieurs dépôts) :
 
 ```powershell
 cargo run --release -- https://github.com/utilisateur/depot.git "Erreur lors de l'authentification OAuth"
@@ -215,7 +215,7 @@ $env:ECHO_TUI = "true"
 cargo run --release -- https://github.com/utilisateur/depot.git
 ```
 
-Mode variable d'environnement (adaptÃ© Ã  Docker et CI) :
+Mode variable d'environnement (adapté à Docker et CI) :
 
 ```powershell
 $env:ECHO_REPO_URL = "https://github.com/utilisateur/depot.git"
@@ -228,32 +228,32 @@ cargo run --release
 docker compose up --build
 ```
 
-Le `docker-compose.yml` fourni lance Echo-Rust avec Neo4j et Qdrant. Les secrets passent par un fichier `.env` ; les ports des bases sont liÃ©s Ã  `127.0.0.1` pour qu'aucun ne soit exposÃ© au rÃ©seau.
+Le `docker-compose.yml` fourni lance Echo-Rust avec Neo4j et Qdrant. Les secrets passent par un fichier `.env` ; les ports des bases sont liés à `127.0.0.1` pour qu'aucun ne soit exposé au réseau.
 
 ## Sandbox
 
-| Mode | Description | Usage recommandÃ© |
+| Mode | Description | Usage recommandé |
 |---|---|---|
-| `wasm` | ExÃ©cution isolÃ©e via Wasmtime | Par dÃ©faut, dÃ©marrage rapide |
-| `docker` | ExÃ©cution dans un conteneur | Code nÃ©cessitant un OS complet |
+| `wasm` | Exécution isolée via Wasmtime | Par défaut, démarrage rapide |
+| `docker` | Exécution dans un conteneur | Code nécessitant un OS complet |
 
-Le mode Wasm actuel exÃ©cute un module minimal et sert de fondation au sandbox. Le mode Docker utilise l'image de `[docker].sandbox_image`, dÃ©sactive le rÃ©seau et supprime le conteneur aprÃ¨s exÃ©cution.
+Le mode Wasm actuel exécute un module minimal et sert de fondation au sandbox. Le mode Docker utilise l'image de `[docker].sandbox_image`, désactive le réseau et supprime le conteneur après exécution.
 
 ## Feuille de route
 
-- [ ] IntÃ©gration complÃ¨te du clonage rÃ©el dans le workflow
-- [ ] ExÃ©cution effective du code utilisateur dans le sandbox Wasm
-- [ ] GÃ©nÃ©ration LLM connectÃ©e au workflow complet
-- [ ] Boucle d'auto-correction Ã  partir des erreurs d'exÃ©cution
-- [ ] Indexation vectorielle rÃ©elle avec SQLite-Vec et Qdrant
+- [ ] Intégration complète du clonage réel dans le workflow
+- [ ] Exécution effective du code utilisateur dans le sandbox Wasm
+- [ ] Génération LLM connectée au workflow complet
+- [ ] Boucle d'auto-correction à partir des erreurs d'exécution
+- [ ] Indexation vectorielle réelle avec SQLite-Vec et Qdrant
 - [ ] Images Docker multi-architecture (`amd64`, `arm64`)
-- [ ] Tests d'intÃ©gration et jeux d'essai SWE-bench
-- [ ] Publication d'images conteneurisÃ©es
+- [ ] Tests d'intégration et jeux d'essai SWE-bench
+- [ ] Publication d'images conteneurisées
 
 ## Contribution
 
-1. Forkez le dÃ©pÃ´t.
-2. CrÃ©ez une branche : `git checkout -b feature/ma-fonctionnalite`.
+1. Forkez le dépôt.
+2. Créez une branche : `git checkout -b feature/ma-fonctionnalite`.
 3. Commitez : `git commit -m "feat: ajoute ma fonctionnalite"`.
 4. Poussez : `git push origin feature/ma-fonctionnalite`.
 5. Ouvrez une Pull Request.
@@ -262,4 +262,4 @@ Avant de soumettre : `cargo fmt && cargo clippy && cargo test`.
 
 ## Licence
 
-DistribuÃ© sous licence [MIT](LICENSE).
+Distribué sous licence [MIT](LICENSE).
