@@ -217,3 +217,84 @@ impl AstActor {
         Ok(deps)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const PY: &str = "import os
+
+class Greeter:
+    def greet(self, name):
+        return f\"hello {name}\"
+
+def main():
+    g = Greeter()
+    print(g.greet(\"world\"))
+";
+
+    #[test]
+    fn parses_python_functions_classes_imports() {
+        let g = AstActor::parse(PY, "python", "app.py").expect("parse python");
+        let kinds: Vec<&str> = g.nodes.values().map(|n| n.kind.as_str()).collect();
+        assert!(kinds.contains(&"function_definition"));
+        assert!(kinds.contains(&"class_definition"));
+        assert!(kinds.contains(&"import_statement"));
+        let names: Vec<&str> = g.nodes.values().map(|n| n.name.as_str()).collect();
+        assert!(names.contains(&"Greeter"));
+        assert!(names.contains(&"greet"));
+        assert!(names.contains(&"main"));
+    }
+
+    #[test]
+    fn line_numbers_are_one_based() {
+        let g = AstActor::parse(PY, "python", "app.py").unwrap();
+        let main = g.nodes.values().find(|n| n.name == "main").expect("main trouvé");
+        assert_eq!(main.start_line, 7);
+        let greet = g.nodes.values().find(|n| n.name == "greet").expect("greet trouvé");
+        assert_eq!(greet.start_line, 4);
+    }
+
+    #[test]
+    fn contains_edges_link_class_to_method() {
+        let g = AstActor::parse(PY, "python", "app.py").unwrap();
+        let greet = g.nodes.values().find(|n| n.name == "greet").unwrap();
+        let linked = g.edges.iter().any(|(from, to, kind)| {
+            kind == "contains"
+                && to == &greet.id
+                && g.nodes.get(from).map(|p| p.name == "Greeter").unwrap_or(false)
+        });
+        assert!(linked, "greet doit être rattaché à Greeter par une arête contains");
+    }
+
+    #[test]
+    fn unsupported_language_is_rejected() {
+        assert!(AstActor::parse("int main() { return 0; }", "cobol", "x.c").is_err());
+    }
+
+    #[test]
+    fn parses_rust_functions() {
+        let code = "fn compute(a: u32) -> u32 { a + 1 }\n";
+        let g = AstActor::parse(code, "rust", "lib.rs").expect("parse rust");
+        assert!(g
+            .nodes
+            .values()
+            .any(|n| n.kind == "function_declaration" && n.name == "compute"));
+    }
+
+    #[test]
+    fn find_deps_returns_contained_symbols() {
+        let g = AstActor::parse(PY, "python", "app.py").unwrap();
+        let deps = AstActor::find_deps(&g, "Greeter").expect("deps de Greeter");
+        assert!(deps.iter().any(|d| d.contains("greet")));
+        assert!(AstActor::find_deps(&g, "symbole_inexistant").is_err());
+    }
+
+    #[test]
+    fn petgraph_conversion_preserves_counts() {
+        let g = AstActor::parse(PY, "python", "app.py").unwrap();
+        let pg = g.to_petgraph();
+        assert_eq!(pg.node_count(), g.nodes.len());
+        assert_eq!(pg.edge_count(), g.edges.len());
+    }
+}

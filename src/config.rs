@@ -140,3 +140,90 @@ impl Default for Settings {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn defaults_are_sane_and_safe() {
+        let s = Settings::default();
+        assert_eq!(s.sandbox.mode, "wasm");
+        // Le sandbox Docker ne doit jamais avoir de réseau par défaut.
+        assert_eq!(s.docker.network_mode, "none");
+        assert!(s.wasm.enabled);
+        assert_eq!(s.wasm.max_memory, 512 * 1024 * 1024);
+        // Jamais de clé API en dur dans les défauts.
+        assert!(s.llm.api_key.is_empty());
+        assert!(s.agent.max_iterations > 0);
+        assert!(s.agent.parallel_workers > 0);
+    }
+
+    #[test]
+    fn full_toml_is_parsed() {
+        let toml = r#"
+[neo4j]
+uri = "bolt://db:7687"
+user = "neo4j"
+password = "test"
+
+[docker]
+sandbox_image = "alpine:3.19"
+network_mode = "none"
+memory_limit = "256m"
+cpu_limit = 0.5
+
+[wasm]
+enabled = false
+max_memory = 268435456
+timeout_ms = 5000
+
+[llm]
+api_key = "test-key"
+base_url = "http://localhost:1234/v1"
+model = "test-model"
+temperature = 0.7
+max_tokens = 1024
+
+[vector_db]
+backend = "qdrant"
+qdrant_url = "http://localhost:6333"
+sqlite_path = "v.db"
+embedding_dim = 384
+
+[sandbox]
+mode = "docker"
+max_retries = 1
+timeout_seconds = 10
+
+[agent]
+max_iterations = 2
+enable_self_healing = false
+enable_hybrid_rag = false
+parallel_workers = 1
+"#;
+        let s: Settings = Figment::new().merge(Toml::string(toml)).extract().expect("toml valide");
+        assert_eq!(s.llm.model, "test-model");
+        assert_eq!(s.llm.temperature, 0.7);
+        assert_eq!(s.sandbox.mode, "docker");
+        assert!(!s.wasm.enabled);
+        assert_eq!(s.wasm.max_memory, 268435456);
+        assert_eq!(s.vector_db.backend, "qdrant");
+        assert_eq!(s.vector_db.embedding_dim, 384);
+        assert_eq!(s.agent.parallel_workers, 1);
+        assert!(!s.agent.enable_self_healing);
+        assert_eq!(s.docker.cpu_limit, 0.5);
+    }
+
+    #[test]
+    fn env_overrides_win() {
+        // Séquentiel : seule cette fonction touche aux variables ECHO_*.
+        std::env::set_var("ECHO_LLM__MODEL", "env-model");
+        std::env::set_var("ECHO_SANDBOX__MODE", "docker");
+        let s = Settings::load().expect("config par env");
+        std::env::remove_var("ECHO_LLM__MODEL");
+        std::env::remove_var("ECHO_SANDBOX__MODE");
+        assert_eq!(s.llm.model, "env-model");
+        assert_eq!(s.sandbox.mode, "docker");
+    }
+}

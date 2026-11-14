@@ -164,3 +164,39 @@ impl AgentWorkflow {
         Ok(st)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn workflow_reaches_done_and_produces_script() {
+        let wf = AgentWorkflow::new(5, true);
+        let st = wf
+            .run(AgentState::new(
+                "NullPointerError dans user_auth".into(),
+                "https://github.com/example/target-repo.git".into(),
+            ))
+            .await
+            .expect("workflow OK");
+        assert_eq!(st.phase, Phase::Done);
+        assert!(st.reproduction_script.is_some());
+        assert_eq!(st.iteration, 0);
+        assert!(st.ast_nodes > 0);
+        assert!(st.graph_edges > 0);
+        assert!(!st.history.is_empty());
+    }
+
+    #[tokio::test]
+    async fn zero_max_iterations_fails_immediately() {
+        let wf = AgentWorkflow::new(0, true);
+        let st = wf
+            .run(AgentState::new(
+                "bug".into(),
+                "https://example.com/r.git".into(),
+            ))
+            .await
+            .expect("workflow OK");
+        assert!(matches!(st.phase, Phase::Failed(ref e) if e.contains("max iterations")));
+    }
+}
