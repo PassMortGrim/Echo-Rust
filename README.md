@@ -1,8 +1,23 @@
 # Echo-Rust
 
-**Echo-Rust** is an automated bug-reproduction agent written in Rust ó a from-scratch rewrite of the original *Echo* Python agent.
+[![CI](https://github.com/PassMortGrim/Echo-Rust/actions/workflows/ci.yml/badge.svg)](https://github.com/PassMortGrim/Echo-Rust/actions/workflows/ci.yml)
 
-> ?? **Status: working prototype.** The CLI pipeline starts and produces a reproduction script; full integration of actors, RAG and real sandboxes is still under development.
+**Echo-Rust** is an automated bug-reproduction agent written in Rust ‚Äî a from-scratch rewrite of the original *Echo* Python agent.
+
+> üöß **Status: working prototype.** See [Works today](#works-today) and [Planned](#planned) for the exact boundary.
+
+### Works today
+
+- Configuration loading (TOML + `ECHO_*` env overrides) with safe defaults
+- Spawning of the 4 actors (Git, AST, LLM, Sandbox) via Ractor
+- Workflow state machine (Init ‚Üí ‚Ä¶ ‚Üí Done) in CLI and TUI modes
+- AST parsing (Tree-sitter) into an in-memory code graph
+- Docker Compose stack (Neo4j + Qdrant, ports bound to localhost)
+- CI on every push: format check, clippy, unit tests
+
+### Planned
+
+See the [Roadmap](#roadmap): real cloning into the workflow, effective Wasm execution, LLM generation wired end-to-end, vector indexing, self-healing loop.
 
 ## Overview
 
@@ -74,11 +89,11 @@ $env:ECHO_VECTOR_DB__BACKEND = "sqlite"
 cargo run --release
 ```
 
-> ?? Never commit `config.toml`, `.env` or any API key. Use `config.example.toml` as a template.
+> ‚ö†Ô∏è Never commit `config.toml`, `.env` or any API key. Use `config.example.toml` as a template.
 
 ## Usage
 
-CLI mode (repository URL as argument ó handy to test several repos):
+CLI mode (repository URL as argument ‚Äî handy to test several repos):
 
 ```powershell
 cargo run --release -- https://github.com/user/repo.git "Error during OAuth authentication"
@@ -138,34 +153,47 @@ Before submitting: `cargo fmt && cargo clippy && cargo test`.
 
 ///
 
-# Echo-Rust (FranÁais)
+# Echo-Rust (Fran√ßais)
 
-**Echo-Rust** est un agent Rust de reproduction automatisÈe de bugs ó rÈÈcriture complËte de l'agent *Echo* original en Python.
+**Echo-Rust** est un agent Rust de reproduction automatis√©e de bugs ‚Äî r√©√©criture compl√®te de l'agent *Echo* original en Python.
 
-> ?? **Statut : prototype fonctionnel.** Le pipeline CLI dÈmarre et produit un script de reproduction ; l'intÈgration complËte des acteurs, du RAG et des sandbox rÈels est en cours.
+> üöß **Statut : prototype fonctionnel.** Voir [Fonctionnel aujourd'hui](#fonctionnel-aujourdhui) et [Planifi√©](#planifi√©) pour la fronti√®re exacte.
 
-## AperÁu
+### Fonctionnel aujourd'hui
 
-Echo-Rust analyse un dÈpÙt GitHub, construit un graphe de connaissances ‡ partir de l'AST, recherche le contexte pertinent, gÈnËre un script de reproduction du bug via un LLM, puis l'exÈcute dans un sandbox isolÈ (WebAssembly, avec repli Docker).
+- Chargement de configuration (TOML + variables `ECHO_*`) avec d√©fauts s√ªrs
+- Spawn des 4 acteurs (Git, AST, LLM, Sandbox) via Ractor
+- Machine √† √©tats du workflow (Init ‚Üí ‚Ä¶ ‚Üí Done) en modes CLI et TUI
+- Parsing AST (Tree-sitter) vers un graphe de code en m√©moire
+- Stack Docker Compose (Neo4j + Qdrant, ports li√©s √† localhost)
+- CI √† chaque push : format, clippy, tests unitaires
 
-## FonctionnalitÈs
+### Planifi√©
 
-- **Architecture multi-agents** basÈe sur [Ractor](https://docs.rs/ractor) : `GitActor`, `AstActor`, `LlmActor` et `SandboxActor` communiquent par messages asynchrones.
-- **Pipeline de reproduction** : initialisation, clonage, analyse AST, construction de graphe, recherche RAG, gÈnÈration, exÈcution.
+Voir la [Feuille de route](#feuille-de-route) : clonage r√©el dans le workflow, ex√©cution Wasm effective, g√©n√©ration LLM branch√©e de bout en bout, indexation vectorielle, boucle d'auto-correction.
+
+## Aper√ßu
+
+Echo-Rust analyse un d√©p√¥t GitHub, construit un graphe de connaissances √† partir de l'AST, recherche le contexte pertinent, g√©n√®re un script de reproduction du bug via un LLM, puis l'ex√©cute dans un sandbox isol√© (WebAssembly, avec repli Docker).
+
+## Fonctionnalit√©s
+
+- **Architecture multi-agents** bas√©e sur [Ractor](https://docs.rs/ractor) : `GitActor`, `AstActor`, `LlmActor` et `SandboxActor` communiquent par messages asynchrones.
+- **Pipeline de reproduction** : initialisation, clonage, analyse AST, construction de graphe, recherche RAG, g√©n√©ration, ex√©cution.
 - **Analyse AST** avec Tree-sitter pour Python, JavaScript/TypeScript et Rust.
-- **Graphe de connaissances** en mÈmoire via `petgraph`, avec option Neo4j persistant.
-- **Recherche hybride** graphe + vecteurs : SQLite-Vec (embarquÈ) ou Qdrant (serveur).
-- **Sandbox Wasmtime** pour l'exÈcution isolÈe, avec mode Docker de secours via Bollard.
+- **Graphe de connaissances** en m√©moire via `petgraph`, avec option Neo4j persistant.
+- **Recherche hybride** graphe + vecteurs : SQLite-Vec (embarqu√©) ou Qdrant (serveur).
+- **Sandbox Wasmtime** pour l'ex√©cution isol√©e, avec mode Docker de secours via Bollard.
 - **TUI** (Ratatui/Crossterm) activable avec `ECHO_TUI=true`.
 - **Configuration flexible** par `config.toml` et variables `ECHO_*`.
 
-## PrÈrequis
+## Pr√©requis
 
 - Rust 1.75+, Cargo, Git
 - Docker (uniquement pour le mode sandbox `docker`)
 - Neo4j et Qdrant (facultatifs, replis inclus)
 
-Sous Windows avec la cible `x86_64-pc-windows-msvc`, les dÈpendances natives peuvent nÈcessiter Visual Studio Build Tools / MSVC, CMake et NASM.
+Sous Windows avec la cible `x86_64-pc-windows-msvc`, les d√©pendances natives peuvent n√©cessiter Visual Studio Build Tools / MSVC, CMake et NASM.
 
 ## Installation
 
@@ -189,7 +217,7 @@ cargo run --release
 
 ## Configuration
 
-Echo-Rust charge d'abord `config.toml`, puis applique les variables `ECHO_*` (sÈparateur de sections : `__`). Voir [`config.example.toml`](config.example.toml) pour un exemple complet annotÈ.
+Echo-Rust charge d'abord `config.toml`, puis applique les variables `ECHO_*` (s√©parateur de sections : `__`). Voir [`config.example.toml`](config.example.toml) pour un exemple complet annot√©.
 
 ```powershell
 $env:ECHO_LLM__API_KEY = "sk-..."
@@ -198,11 +226,11 @@ $env:ECHO_VECTOR_DB__BACKEND = "sqlite"
 cargo run --release
 ```
 
-> ?? Ne jamais commiter `config.toml`, `.env` ou une clÈ API. Utilisez `config.example.toml` comme modËle.
+> ‚ö†Ô∏è Ne jamais commiter `config.toml`, `.env` ou une cl√© API. Utilisez `config.example.toml` comme mod√®le.
 
 ## Utilisation
 
-Mode CLI (URL en argument ó pratique pour tester plusieurs dÈpÙts) :
+Mode CLI (URL en argument ‚Äî pratique pour tester plusieurs d√©p√¥ts) :
 
 ```powershell
 cargo run --release -- https://github.com/utilisateur/depot.git "Erreur lors de l'authentification OAuth"
@@ -215,7 +243,7 @@ $env:ECHO_TUI = "true"
 cargo run --release -- https://github.com/utilisateur/depot.git
 ```
 
-Mode variable d'environnement (adaptÈ ‡ Docker et CI) :
+Mode variable d'environnement (adapt√© √† Docker et CI) :
 
 ```powershell
 $env:ECHO_REPO_URL = "https://github.com/utilisateur/depot.git"
@@ -228,32 +256,32 @@ cargo run --release
 docker compose up --build
 ```
 
-Le `docker-compose.yml` fourni lance Echo-Rust avec Neo4j et Qdrant. Les secrets passent par un fichier `.env` ; les ports des bases sont liÈs ‡ `127.0.0.1` pour qu'aucun ne soit exposÈ au rÈseau.
+Le `docker-compose.yml` fourni lance Echo-Rust avec Neo4j et Qdrant. Les secrets passent par un fichier `.env` ; les ports des bases sont li√©s √† `127.0.0.1` pour qu'aucun ne soit expos√© au r√©seau.
 
 ## Sandbox
 
-| Mode | Description | Usage recommandÈ |
+| Mode | Description | Usage recommand√© |
 |---|---|---|
-| `wasm` | ExÈcution isolÈe via Wasmtime | Par dÈfaut, dÈmarrage rapide |
-| `docker` | ExÈcution dans un conteneur | Code nÈcessitant un OS complet |
+| `wasm` | Ex√©cution isol√©e via Wasmtime | Par d√©faut, d√©marrage rapide |
+| `docker` | Ex√©cution dans un conteneur | Code n√©cessitant un OS complet |
 
-Le mode Wasm actuel exÈcute un module minimal et sert de fondation au sandbox. Le mode Docker utilise l'image de `[docker].sandbox_image`, dÈsactive le rÈseau et supprime le conteneur aprËs exÈcution.
+Le mode Wasm actuel ex√©cute un module minimal et sert de fondation au sandbox. Le mode Docker utilise l'image de `[docker].sandbox_image`, d√©sactive le r√©seau et supprime le conteneur apr√®s ex√©cution.
 
 ## Feuille de route
 
-- [ ] IntÈgration complËte du clonage rÈel dans le workflow
-- [ ] ExÈcution effective du code utilisateur dans le sandbox Wasm
-- [ ] GÈnÈration LLM connectÈe au workflow complet
-- [ ] Boucle d'auto-correction ‡ partir des erreurs d'exÈcution
-- [ ] Indexation vectorielle rÈelle avec SQLite-Vec et Qdrant
+- [ ] Int√©gration compl√®te du clonage r√©el dans le workflow
+- [ ] Ex√©cution effective du code utilisateur dans le sandbox Wasm
+- [ ] G√©n√©ration LLM connect√©e au workflow complet
+- [ ] Boucle d'auto-correction √† partir des erreurs d'ex√©cution
+- [ ] Indexation vectorielle r√©elle avec SQLite-Vec et Qdrant
 - [ ] Images Docker multi-architecture (`amd64`, `arm64`)
-- [ ] Tests d'intÈgration et jeux d'essai SWE-bench
-- [ ] Publication d'images conteneurisÈes
+- [ ] Tests d'int√©gration et jeux d'essai SWE-bench
+- [ ] Publication d'images conteneuris√©es
 
 ## Contribution
 
-1. Forkez le dÈpÙt.
-2. CrÈez une branche : `git checkout -b feature/ma-fonctionnalite`.
+1. Forkez le d√©p√¥t.
+2. Cr√©ez une branche : `git checkout -b feature/ma-fonctionnalite`.
 3. Commitez : `git commit -m "feat: ajoute ma fonctionnalite"`.
 4. Poussez : `git push origin feature/ma-fonctionnalite`.
 5. Ouvrez une Pull Request.
@@ -262,4 +290,4 @@ Avant de soumettre : `cargo fmt && cargo clippy && cargo test`.
 
 ## Licence
 
-DistribuÈ sous licence [MIT](LICENSE).
+Distribu√© sous licence [MIT](LICENSE).
