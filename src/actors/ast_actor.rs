@@ -317,4 +317,35 @@ def main():
         assert_eq!(pg.node_count(), g.nodes.len());
         assert_eq!(pg.edge_count(), g.edges.len());
     }
+
+    /// Benchmark manuel (ignoré en CI) : débit de parsing AST sur un gros
+    /// fichier Rust synthétique.
+    /// Lancer : cargo test --release bench_parse -- --ignored --nocapture
+    #[test]
+    #[ignore = "benchmark manuel : cargo test --release bench_parse -- --ignored --nocapture"]
+    fn bench_parse_throughput() {
+        let n = 2000;
+        let mut code = String::from("use std::collections::HashMap;\n\n");
+        for i in 0..n {
+            code.push_str(&format!(
+                "/// Fonction générée {i}\npub fn generated_{i}(a: u64, b: u64) -> u64 {{\n    let acc = a.wrapping_add(b);\n    let acc = acc ^ (acc << 3);\n    if acc > 42 {{ acc.wrapping_mul(3) }} else {{ acc.rotate_left(7) }}\n}}\n\n"
+            ));
+        }
+        let lines = code.lines().count();
+
+        // Échauffement (compilation du parseur, caches froids).
+        let _ = AstActor::parse(&code, "rust", "bench.rs").expect("parse");
+
+        let start = std::time::Instant::now();
+        let g = AstActor::parse(&code, "rust", "bench.rs").expect("parse");
+        let elapsed = start.elapsed();
+
+        println!("Fichier synthétique : {lines} lignes, {n} fonctions");
+        println!("Nœuds retenus       : {}", g.nodes.len());
+        println!("Temps de parsing    : {elapsed:.2?}");
+        println!(
+            "Débit               : {:.0} lignes/s",
+            lines as f64 / elapsed.as_secs_f64()
+        );
+    }
 }
