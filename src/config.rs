@@ -7,7 +7,10 @@ use serde::{Deserialize, Serialize};
 
 // ─── Racine ───────────────────────────────────────────────────────────
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+/// Configuration racine. `#[serde(default)]` autorise les overrides partiels
+/// (TOML incomplet ou variables ECHO_* isolées) sans perdre les défauts sûrs.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(default)]
 pub struct Settings {
     pub neo4j: Neo4jConfig,
     pub docker: DockerConfig,
@@ -18,16 +21,28 @@ pub struct Settings {
     pub agent: AgentConfig,
 }
 
-// ─── Sous-configurations ──────────────────────────────────────────────
+// ─── Sous-configurations (chaque Default implémente des défauts sûrs) ─
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
 pub struct Neo4jConfig {
     pub uri: String,
     pub user: String,
     pub password: String,
 }
 
+impl Default for Neo4jConfig {
+    fn default() -> Self {
+        Self {
+            uri: "bolt://localhost:7687".into(),
+            user: "neo4j".into(),
+            password: "password".into(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
 pub struct DockerConfig {
     pub sandbox_image: String,
     pub network_mode: String,
@@ -35,14 +50,38 @@ pub struct DockerConfig {
     pub cpu_limit: f32,
 }
 
+impl Default for DockerConfig {
+    fn default() -> Self {
+        Self {
+            sandbox_image: "python:3.11-slim".into(),
+            // Aucun réseau par défaut : sécurité d'abord.
+            network_mode: "none".into(),
+            memory_limit: "512m".into(),
+            cpu_limit: 1.0,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
 pub struct WasmConfig {
     pub enabled: bool,
     pub max_memory: u64,
     pub timeout_ms: u64,
 }
 
+impl Default for WasmConfig {
+    fn default() -> Self {
+        Self {
+            enabled: true,
+            max_memory: 512 * 1024 * 1024,
+            timeout_ms: 30_000,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
 pub struct LlmConfig {
     pub api_key: String,
     pub base_url: String,
@@ -51,7 +90,21 @@ pub struct LlmConfig {
     pub max_tokens: u32,
 }
 
+impl Default for LlmConfig {
+    fn default() -> Self {
+        Self {
+            // Jamais de clé API en dur dans les défauts.
+            api_key: String::new(),
+            base_url: "https://api.openai.com/v1".into(),
+            model: "gpt-4-turbo-preview".into(),
+            temperature: 0.2,
+            max_tokens: 4096,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
 pub struct VectorDbConfig {
     pub backend: String,
     pub qdrant_url: String,
@@ -59,19 +112,53 @@ pub struct VectorDbConfig {
     pub embedding_dim: usize,
 }
 
+impl Default for VectorDbConfig {
+    fn default() -> Self {
+        Self {
+            backend: "sqlite".into(),
+            qdrant_url: "http://localhost:6333".into(),
+            sqlite_path: "echo_vectors.db".into(),
+            embedding_dim: 1536,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
 pub struct SandboxConfig {
     pub mode: String,
     pub max_retries: u32,
     pub timeout_seconds: u64,
 }
 
+impl Default for SandboxConfig {
+    fn default() -> Self {
+        Self {
+            mode: "wasm".into(),
+            max_retries: 3,
+            timeout_seconds: 60,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
 pub struct AgentConfig {
     pub max_iterations: u32,
     pub enable_self_healing: bool,
     pub enable_hybrid_rag: bool,
     pub parallel_workers: usize,
+}
+
+impl Default for AgentConfig {
+    fn default() -> Self {
+        Self {
+            max_iterations: 5,
+            enable_self_healing: true,
+            enable_hybrid_rag: true,
+            parallel_workers: 4,
+        }
+    }
 }
 
 // ─── Chargement ───────────────────────────────────────────────────────
@@ -91,53 +178,6 @@ impl Settings {
             tracing::warn!("Config introuvable ({}), utilisation des défauts", e);
             Self::default()
         })
-    }
-}
-
-impl Default for Settings {
-    fn default() -> Self {
-        Self {
-            neo4j: Neo4jConfig {
-                uri: "bolt://localhost:7687".into(),
-                user: "neo4j".into(),
-                password: "password".into(),
-            },
-            docker: DockerConfig {
-                sandbox_image: "python:3.11-slim".into(),
-                network_mode: "none".into(),
-                memory_limit: "512m".into(),
-                cpu_limit: 1.0,
-            },
-            wasm: WasmConfig {
-                enabled: true,
-                max_memory: 512 * 1024 * 1024,
-                timeout_ms: 30_000,
-            },
-            llm: LlmConfig {
-                api_key: String::new(),
-                base_url: "https://api.openai.com/v1".into(),
-                model: "gpt-4-turbo-preview".into(),
-                temperature: 0.2,
-                max_tokens: 4096,
-            },
-            vector_db: VectorDbConfig {
-                backend: "sqlite".into(),
-                qdrant_url: "http://localhost:6333".into(),
-                sqlite_path: "echo_vectors.db".into(),
-                embedding_dim: 1536,
-            },
-            sandbox: SandboxConfig {
-                mode: "wasm".into(),
-                max_retries: 3,
-                timeout_seconds: 60,
-            },
-            agent: AgentConfig {
-                max_iterations: 5,
-                enable_self_healing: true,
-                enable_hybrid_rag: true,
-                parallel_workers: 4,
-            },
-        }
     }
 }
 

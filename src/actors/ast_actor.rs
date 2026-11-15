@@ -177,13 +177,20 @@ impl AstActor {
     fn is_significant(kind: &str) -> bool {
         matches!(
             kind,
+            // Python
             "function_definition"
                 | "class_definition"
                 | "import_statement"
                 | "import_from_statement"
-                | "function_declaration"
-                | "class_declaration"
+                // JavaScript / TypeScript
                 | "method_definition"
+                | "class_declaration"
+                // Rust (tree-sitter-rust nomme les fonctions `function_item`)
+                | "function_item"
+                | "function_declaration"
+                | "struct_item"
+                | "enum_item"
+                | "impl_item"
         )
     }
 
@@ -288,10 +295,11 @@ def main():
     fn parses_rust_functions() {
         let code = "fn compute(a: u32) -> u32 { a + 1 }\n";
         let g = AstActor::parse(code, "rust", "lib.rs").expect("parse rust");
+        // tree-sitter-rust nomme les définitions de fonctions `function_item`.
         assert!(g
             .nodes
             .values()
-            .any(|n| n.kind == "function_declaration" && n.name == "compute"));
+            .any(|n| n.kind == "function_item" && n.name == "compute"));
     }
 
     #[test]

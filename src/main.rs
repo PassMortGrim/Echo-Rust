@@ -2,6 +2,11 @@
 //!
 //! Orchestration : config → acteurs → services → workflow → TUI/CLI.
 
+// Prototype v0.2 : une partie de l'API (variantes de messages, services
+// vectoriels, exécution sandbox) est réservée à l'intégration prévue en v0.3.
+// dead_code est toléré tant que le câblage complet n'est pas effectué.
+#![allow(dead_code)]
+
 mod actors;
 mod config;
 mod services;
@@ -97,10 +102,6 @@ async fn main() -> Result<()> {
     tracing::info!("Issue : {issue}");
 
     // ── État initial ──────────────────────────────────────────────────
-    //let initial = AgentState::new(
-    //    "NullPointerError dans user_auth lors du traitement OAuth".into(),
-    //    "https://github.com/example/target-repo.git".into(),
-    //);
     let initial = AgentState::new(issue, repo_url);
 
     let shared_state = Arc::new(Mutex::new(initial.clone()));
