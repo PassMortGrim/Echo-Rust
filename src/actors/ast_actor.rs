@@ -343,9 +343,7 @@ def main():
         println!("Fichier synthétique : {lines} lignes, {n} fonctions");
         println!("Nœuds retenus       : {}", g.nodes.len());
         println!("Temps de parsing    : {elapsed:.2?}");
-        println!(
-            "Débit               : {:.0} lignes/s",
-            lines as f64 / elapsed.as_secs_f64()
-        );
+        let throughput = lines as f64 / elapsed.as_secs_f64();
+        println!("Débit               : {throughput:.0} lignes/s");
     }
 }
