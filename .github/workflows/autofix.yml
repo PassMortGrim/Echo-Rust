@@ -1,0 +1,63 @@
+# Workflow temporaire d'auto-correction : applique cargo fmt + clippy --fix,
+# commite le résultat, et dépose des rapports de diagnostic lisibles.
+# À supprimer une fois la CI verte.
+
+name: Auto-fix
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  autofix:
+    name: Auto-fix & diagnostics
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Format (application)
+        run: cargo fmt --all
+
+      - name: Clippy (auto-fix puis rapport)
+        run: |
+          cargo clippy --fix --all-targets --allow-dirty --allow-staged || true
+          { cargo clippy --all-targets -- -D warnings; echo "CLIPPY_EXIT=$?"; } 2>&1 | tee clippy-report.txt
+
+      - name: Tests (rapport)
+        run: |
+          { cargo test; echo "TEST_EXIT=$?"; } 2>&1 | tee test-report.txt
+
+      - name: Commit corrections et diagnostics
+        id: commit
+        run: |
+          git config user.name "echo-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            echo "Rien à commiter"
+          else
+            git commit -m "ci: auto-fix fmt/clippy + rapports de diagnostic [skip ci]"
+            git push
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Redéclencher la CI sur le code corrigé
+        if: steps.commit.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/PassMortGrim/Echo-Rust/actions/workflows/ci.yml/dispatches -f ref=main
