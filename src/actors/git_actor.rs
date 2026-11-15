@@ -68,7 +68,11 @@ impl Actor for GitActor {
                 let result = self.clone_repo(&url).await;
                 reply.send(result).ok();
             }
-            GitMessage::Checkout { repo_path, commit, reply } => {
+            GitMessage::Checkout {
+                repo_path,
+                commit,
+                reply,
+            } => {
                 let result = self.checkout(&repo_path, &commit).await;
                 reply.send(result).ok();
             }
@@ -90,8 +94,7 @@ impl GitActor {
         let path = dest.clone();
 
         tokio::task::spawn_blocking(move || -> Result<String> {
-            let repo = git2::Repository::clone(&url, &path)
-                .context("git clone")?;
+            let repo = git2::Repository::clone(&url, &path).context("git clone")?;
             tracing::info!("Cloné {:?} → {:?}", url, path);
             let _ = repo;
             Ok(path.to_string_lossy().into_owned())
@@ -124,7 +127,7 @@ impl GitActor {
             while let Some(entry) = entries.next_entry().await? {
                 let p = entry.path();
                 if p.is_dir() {
-                    if p.file_name().map_or(false, |n| n != ".git") {
+                    if p.file_name().is_some_and(|n| n != ".git") {
                         stack.push(p);
                     }
                 } else {

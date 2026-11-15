@@ -1,5 +1,6 @@
 //! TuiApp — dashboard terminal temps réel avec ratatui + crossterm.
 
+use crate::state::graph::{AgentState, Phase};
 use anyhow::Result;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
@@ -11,13 +12,12 @@ use ratatui::{
     layout::{Constraint, Direction, Layout},
     style::{Color, Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Gauge, List, ListItem, Paragraph, Wrap},
+    widgets::{Block, Borders, List, ListItem, Paragraph, Wrap},
     Frame, Terminal,
 };
 use std::io;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
-use crate::state::graph::{AgentState, Phase};
 
 pub struct TuiApp {
     state: Arc<Mutex<AgentState>>,
@@ -84,9 +84,9 @@ impl TuiApp {
             .direction(Direction::Vertical)
             .margin(1)
             .constraints([
-                Constraint::Length(3),  // header
-                Constraint::Length(8),  // état agent
-                Constraint::Min(4),     // logs
+                Constraint::Length(3), // header
+                Constraint::Length(8), // état agent
+                Constraint::Min(4),    // logs
             ])
             // .split(f.area()); -> Dans ratatui 0.26, Frame expose size() ; area() a été introduit dans une version ultérieure.
             .split(f.size());
@@ -107,9 +107,9 @@ impl TuiApp {
         // État de l'agent
         let st = self.state.lock().unwrap();
         let phase_color = match st.phase {
-            Phase::Done      => Color::Green,
+            Phase::Done => Color::Green,
             Phase::Failed(_) => Color::Red,
-            _                => Color::Yellow,
+            _ => Color::Yellow,
         };
 
         let info = vec![
@@ -131,7 +131,10 @@ impl TuiApp {
             ]),
             Line::from(vec![
                 Span::styled(" AST    ", Style::default().add_modifier(Modifier::BOLD)),
-                Span::raw(format!("{} nœuds / {} arêtes", st.ast_nodes, st.graph_edges)),
+                Span::raw(format!(
+                    "{} nœuds / {} arêtes",
+                    st.ast_nodes, st.graph_edges
+                )),
             ]),
             Line::from(vec![
                 Span::styled(" Script ", Style::default().add_modifier(Modifier::BOLD)),
@@ -144,7 +147,11 @@ impl TuiApp {
         ];
 
         let panel = Paragraph::new(info)
-            .block(Block::default().borders(Borders::ALL).title(" Agent State "))
+            .block(
+                Block::default()
+                    .borders(Borders::ALL)
+                    .title(" Agent State "),
+            )
             .wrap(Wrap { trim: true });
         f.render_widget(panel, chunks[1]);
 
@@ -157,8 +164,11 @@ impl TuiApp {
             .map(|l| ListItem::new(l.as_str()))
             .collect();
 
-        let log_panel = List::new(items)
-            .block(Block::default().borders(Borders::ALL).title(" Logs (q pour quitter) "));
+        let log_panel = List::new(items).block(
+            Block::default()
+                .borders(Borders::ALL)
+                .title(" Logs (q pour quitter) "),
+        );
         f.render_widget(log_panel, chunks[2]);
     }
 }

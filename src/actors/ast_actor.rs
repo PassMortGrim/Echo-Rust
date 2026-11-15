@@ -7,9 +7,6 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tree_sitter::{Node, Parser};
 
-
-
-
 // ─── Types ────────────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -88,11 +85,20 @@ impl Actor for AstActor {
         _: &mut Self::State,
     ) -> Result<(), ActorProcessingErr> {
         match msg {
-            AstMessage::ParseFile { code, language, file_path, reply } => {
+            AstMessage::ParseFile {
+                code,
+                language,
+                file_path,
+                reply,
+            } => {
                 let result = Self::parse(&code, &language, &file_path);
                 reply.send(result).ok();
             }
-            AstMessage::QueryDependencies { graph, symbol, reply } => {
+            AstMessage::QueryDependencies {
+                graph,
+                symbol,
+                reply,
+            } => {
                 let result = Self::find_deps(&graph, &symbol);
                 reply.send(result).ok();
             }
@@ -116,9 +122,7 @@ impl AstActor {
             other => anyhow::bail!("langage non supporté : {other}"),
         }
 
-        let tree = parser
-            .parse(code, None)
-            .context("tree-sitter parse")?;
+        let tree = parser.parse(code, None).context("tree-sitter parse")?;
 
         let mut graph = CodeGraph {
             nodes: HashMap::new(),
@@ -135,13 +139,7 @@ impl AstActor {
         Ok(graph)
     }
 
-    fn walk(
-        node: Node,
-        src: &str,
-        file: &str,
-        parent: Option<String>,
-        graph: &mut CodeGraph,
-    ) {
+    fn walk(node: Node, src: &str, file: &str, parent: Option<String>, graph: &mut CodeGraph) {
         let kind = node.kind().to_string();
 
         if Self::is_significant(&kind) {
@@ -249,9 +247,17 @@ def main():
     #[test]
     fn line_numbers_are_one_based() {
         let g = AstActor::parse(PY, "python", "app.py").unwrap();
-        let main = g.nodes.values().find(|n| n.name == "main").expect("main trouvé");
+        let main = g
+            .nodes
+            .values()
+            .find(|n| n.name == "main")
+            .expect("main trouvé");
         assert_eq!(main.start_line, 7);
-        let greet = g.nodes.values().find(|n| n.name == "greet").expect("greet trouvé");
+        let greet = g
+            .nodes
+            .values()
+            .find(|n| n.name == "greet")
+            .expect("greet trouvé");
         assert_eq!(greet.start_line, 4);
     }
 
@@ -262,9 +268,15 @@ def main():
         let linked = g.edges.iter().any(|(from, to, kind)| {
             kind == "contains"
                 && to == &greet.id
-                && g.nodes.get(from).map(|p| p.name == "Greeter").unwrap_or(false)
+                && g.nodes
+                    .get(from)
+                    .map(|p| p.name == "Greeter")
+                    .unwrap_or(false)
         });
-        assert!(linked, "greet doit être rattaché à Greeter par une arête contains");
+        assert!(
+            linked,
+            "greet doit être rattaché à Greeter par une arête contains"
+        );
     }
 
     #[test]

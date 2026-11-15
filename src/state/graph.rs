@@ -1,7 +1,6 @@
 //! Machine à états asynchrone — orchestration du workflow de l'agent.
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 // ─── État global de l'agent ───────────────────────────────────────────
 
@@ -35,16 +34,16 @@ pub enum Phase {
 impl std::fmt::Display for Phase {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Phase::Init            => write!(f, "init"),
-            Phase::CloneRepo       => write!(f, "clone"),
-            Phase::ParseAst        => write!(f, "parse_ast"),
-            Phase::BuildGraph      => write!(f, "build_graph"),
-            Phase::RagSearch       => write!(f, "rag_search"),
-            Phase::GenerateScript  => write!(f, "generate"),
-            Phase::ExecuteSandbox  => write!(f, "execute"),
-            Phase::SelfHeal        => write!(f, "self_heal"),
-            Phase::Done            => write!(f, "done"),
-            Phase::Failed(e)       => write!(f, "failed({e})"),
+            Phase::Init => write!(f, "init"),
+            Phase::CloneRepo => write!(f, "clone"),
+            Phase::ParseAst => write!(f, "parse_ast"),
+            Phase::BuildGraph => write!(f, "build_graph"),
+            Phase::RagSearch => write!(f, "rag_search"),
+            Phase::GenerateScript => write!(f, "generate"),
+            Phase::ExecuteSandbox => write!(f, "execute"),
+            Phase::SelfHeal => write!(f, "self_heal"),
+            Phase::Done => write!(f, "done"),
+            Phase::Failed(e) => write!(f, "failed({e})"),
         }
     }
 }
@@ -79,7 +78,10 @@ pub struct AgentWorkflow {
 
 impl AgentWorkflow {
     pub fn new(max_iter: u32, self_heal: bool) -> Self {
-        Self { max_iter, self_heal }
+        Self {
+            max_iter,
+            self_heal,
+        }
     }
 
     /// Boucle principale : avance l'agent de phase en phase.

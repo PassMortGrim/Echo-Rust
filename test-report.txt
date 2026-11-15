@@ -1,0 +1,609 @@
+[1m[92m   Compiling[0m once_cell v1.21.4
+[1m[92m   Compiling[0m libc v0.2.190
+[1m[92m   Compiling[0m cfg-if v1.0.5
+[1m[92m   Compiling[0m serde_core v1.0.229
+[1m[92m   Compiling[0m equivalent v1.0.2
+[1m[92m   Compiling[0m smallvec v1.16.2
+[1m[92m   Compiling[0m hashbrown v0.17.1
+[1m[92m   Compiling[0m memchr v2.8.3
+[1m[92m   Compiling[0m bitflags v2.13.2
+[1m[92m   Compiling[0m log v0.4.34
+[1m[92m   Compiling[0m scopeguard v1.2.0
+[1m[92m   Compiling[0m pin-project-lite v0.2.17
+[1m[92m   Compiling[0m itoa v1.0.18
+[1m[92m   Compiling[0m jobserver v0.1.35
+[1m[92m   Compiling[0m errno v0.3.14
+[1m[92m   Compiling[0m signal-hook-registry v1.4.8
+[1m[92m   Compiling[0m parking_lot_core v0.9.12
+[1m[92m   Compiling[0m cc v1.0.106
+[1m[92m   Compiling[0m lock_api v0.4.14
+[1m[92m   Compiling[0m futures-core v0.3.34
+[1m[92m   Compiling[0m socket2 v0.6.5
+[1m[92m   Compiling[0m parking_lot v0.12.5
+[1m[92m   Compiling[0m mio v1.2.3
+[1m[92m   Compiling[0m futures-sink v0.3.34
+[1m[92m   Compiling[0m zerocopy v0.8.59
+[1m[92m   Compiling[0m serde v1.0.229
+[1m[92m   Compiling[0m indexmap v2.14.2
+[1m[92m   Compiling[0m bytes v1.12.1
+[1m[92m   Compiling[0m anyhow v1.0.104
+[1m[92m   Compiling[0m tracing-core v0.1.36
+[1m[92m   Compiling[0m slab v0.4.12
+[1m[92m   Compiling[0m zerofrom v0.1.8
+[1m[92m   Compiling[0m tokio v1.53.1
+[1m[92m   Compiling[0m futures-channel v0.3.34
+[1m[92m   Compiling[0m stable_deref_trait v1.2.1
+[1m[92m   Compiling[0m yoke v0.8.3
+[1m[92m   Compiling[0m tracing v0.1.44
+[1m[92m   Compiling[0m futures-io v0.3.34
+[1m[92m   Compiling[0m futures-task v0.3.34
+[1m[92m   Compiling[0m percent-encoding v2.3.2
+[1m[92m   Compiling[0m futures-util v0.3.34
+[1m[92m   Compiling[0m fnv v1.0.7
+[1m[92m   Compiling[0m zerovec v0.11.8
+[1m[92m   Compiling[0m http v1.5.0
+[1m[92m   Compiling[0m zeroize v1.9.0
+[1m[92m   Compiling[0m ipnet v2.12.2
+[1m[92m   Compiling[0m ahash v0.8.12
+[1m[92m   Compiling[0m rustls-pki-types v1.15.1
+[1m[92m   Compiling[0m http-body v1.1.0
+[1m[92m   Compiling[0m cmake v0.1.53
+[1m[92m   Compiling[0m getrandom v0.2.17
+[1m[92m   Compiling[0m semver v1.0.28
+[1m[92m   Compiling[0m either v1.18.0
+[1m[92m   Compiling[0m aws-lc-sys v0.30.0
+[1m[92m   Compiling[0m hashbrown v0.14.5
+[1m[92m   Compiling[0m tinystr v0.8.4
+[1m[92m   Compiling[0m writeable v0.6.4
+[1m[92m   Compiling[0m tower-service v0.3.3
+[1m[92m   Compiling[0m litemap v0.8.3
+[1m[92m   Compiling[0m icu_locale_core v2.3.0
+[1m[92m   Compiling[0m thiserror v1.0.69
+[1m[92m   Compiling[0m openssl-sys v0.9.117
+[1m[92m   Compiling[0m zerotrie v0.2.5
+[1m[92m   Compiling[0m tokio-util v0.7.19
+[1m[92m   Compiling[0m potential_utf v0.1.6
+[1m[92m   Compiling[0m utf8_iter v1.0.4
+[1m[92m   Compiling[0m linux-raw-sys v0.12.1
+[1m[92m   Compiling[0m icu_collections v2.3.0
+[1m[92m   Compiling[0m icu_provider v2.3.1
+[1m[92m   Compiling[0m crc32fast v1.5.2
+[1m[92m   Compiling[0m ring v0.17.9
+[1m[92m   Compiling[0m cranelift-entity v0.106.2
+[1m[92m   Compiling[0m rustix v1.1.5
+[1m[92m   Compiling[0m atomic-waker v1.1.2
+[1m[92m   Compiling[0m try-lock v0.2.5
+[1m[92m   Compiling[0m want v0.3.1
+[1m[92m   Compiling[0m h2 v0.4.19
+[1m[92m   Compiling[0m icu_normalizer_data v2.3.0
+[1m[92m   Compiling[0m zmij v1.0.23
+[1m[92m   Compiling[0m icu_properties_data v2.3.0
+[1m[92m   Compiling[0m httparse v1.10.1
+[1m[92m   Compiling[0m gimli v0.28.1
+[1m[92m   Compiling[0m cranelift-codegen-shared v0.106.2
+[1m[92m   Compiling[0m httpdate v1.0.3
+[1m[92m   Compiling[0m leb128 v0.2.7
+[1m[92m   Compiling[0m hyper v1.11.1
+[1m[92m   Compiling[0m cranelift-codegen-meta v0.106.2
+[1m[92m   Compiling[0m icu_properties v2.3.0
+[1m[92m   Compiling[0m icu_normalizer v2.3.0
+[1m[92m   Compiling[0m target-lexicon v0.12.16
+[1m[92m   Compiling[0m untrusted v0.9.0
+[1m[92m   Compiling[0m bumpalo v3.20.3
+[1m[92m   Compiling[0m siphasher v1.0.4
+[1m[92m   Compiling[0m base64 v0.23.1
+[1m[92m   Compiling[0m cranelift-codegen v0.106.2
+[1m[92m   Compiling[0m hyper-util v0.1.21
+[1m[92m   Compiling[0m idna_adapter v1.2.2
+[1m[92m   Compiling[0m wasmparser v0.201.0
+[1m[92m   Compiling[0m http-body-util v0.1.5
+[1m[92m   Compiling[0m hashbrown v0.13.2
+[1m[92m   Compiling[0m form_urlencoded v1.2.2
+[1m[92m   Compiling[0m rustc-hash v1.1.0
+[1m[92m   Compiling[0m openssl-probe v0.2.1
+[1m[92m   Compiling[0m slice-group-by v0.3.1
+[1m[92m   Compiling[0m arbitrary v1.4.2
+[1m[92m   Compiling[0m regalloc2 v0.9.3
+[1m[92m   Compiling[0m cranelift-control v0.106.2
+[1m[92m   Compiling[0m idna v1.1.0
+[1m[92m   Compiling[0m io-lifetimes v2.0.4
+[1m[92m   Compiling[0m crossbeam-utils v0.8.23
+[1m[92m   Compiling[0m cranelift-bforest v0.106.2
+[1m[92m   Compiling[0m zstd-sys v2.1.0+zstd.1.5.7
+[1m[92m   Compiling[0m sync_wrapper v1.0.2
+[1m[92m   Compiling[0m typenum v1.20.1
+[1m[92m   Compiling[0m linux-raw-sys v0.4.15
+[1m[92m   Compiling[0m subtle v2.6.1
+[1m[92m   Compiling[0m tower-layer v0.3.3
+[1m[92m   Compiling[0m rustix v0.38.44
+[1m[92m   Compiling[0m generic-array v0.14.7
+[1m[92m   Compiling[0m wasmtime-types v19.0.2
+[1m[92m   Compiling[0m url v2.5.8
+[1m[92m   Compiling[0m phf_shared v0.11.3
+[1m[92m   Compiling[0m object v0.32.2
+[1m[92m   Compiling[0m tree-sitter v0.22.6
+[1m[92m   Compiling[0m bincode v1.3.3
+[1m[92m   Compiling[0m aho-corasick v1.1.5
+[1m[92m   Compiling[0m wasmtime-component-util v19.0.2
+[1m[92m   Compiling[0m regex-syntax v0.8.11
+[1m[92m   Compiling[0m ambient-authority v0.0.2
+[1m[92m   Compiling[0m regex-automata v0.4.18
+[1m[92m   Compiling[0m io-extras v0.18.4
+[1m[92m   Compiling[0m cpp_demangle v0.4.5
+[1m[92m   Compiling[0m tower v0.5.3
+[1m[92m   Compiling[0m wasmprinter v0.201.0
+[1m[92m   Compiling[0m fs-set-times v0.20.3
+[1m[92m   Compiling[0m wasm-encoder v0.201.0
+[1m[92m   Compiling[0m serde_json v1.0.151
+[1m[92m   Compiling[0m rustix-linux-procfs v0.1.1
+[1m[92m   Compiling[0m libz-sys v1.1.29
+[1m[92m   Compiling[0m toml_datetime v0.6.11
+[1m[92m   Compiling[0m serde_spanned v0.6.9
+[1m[92m   Compiling[0m maybe-owned v0.3.4
+[1m[92m   Compiling[0m winnow v0.7.15
+[1m[92m   Compiling[0m rustc-demangle v0.1.28
+[1m[92m   Compiling[0m toml_write v0.1.2
+[1m[92m   Compiling[0m wasmtime-environ v19.0.2
+[1m[92m   Compiling[0m zstd-safe v7.3.0
+[1m[92m   Compiling[0m darling_core v0.20.11
+[1m[92m   Compiling[0m toml_edit v0.22.27
+[1m[92m   Compiling[0m cap-primitives v3.4.6
+[1m[92m   Compiling[0m phf_generator v0.11.3
+[1m[92m   Compiling[0m getrandom v0.4.3
+[1m[92m   Compiling[0m crossbeam-epoch v0.9.21
+[1m[92m   Compiling[0m crypto-common v0.1.7
+[1m[92m   Compiling[0m block-buffer v0.10.4
+[1m[92m   Compiling[0m wasmtime-fiber v19.0.2
+[1m[92m   Compiling[0m itertools v0.12.1
+[1m[92m   Compiling[0m ittapi-sys v0.4.0
+[1m[92m   Compiling[0m dirs-sys v0.3.7
+[1m[92m   Compiling[0m foreign-types-shared v0.1.1
+[1m[92m   Compiling[0m mime v0.3.17
+[1m[92m   Compiling[0m simdutf8 v0.1.5
+[1m[92m   Compiling[0m core_detect v1.0.0
+[1m[92m   Compiling[0m leb128fmt v0.1.0
+[1m[92m   Compiling[0m openssl v0.10.81
+[1m[92m   Compiling[0m wasm-encoder v0.261.0
+[1m[92m   Compiling[0m wit-parser v0.201.0
+[1m[92m   Compiling[0m encoding_rs v0.8.42
+[1m[92m   Compiling[0m foreign-types v0.3.2
+[1m[92m   Compiling[0m dirs v4.0.0
+[1m[92m   Compiling[0m crossbeam-deque v0.8.8
+[1m[92m   Compiling[0m digest v0.10.7
+[1m[92m   Compiling[0m uuid v1.27.0
+[1m[92m   Compiling[0m phf_codegen v0.11.3
+[1m[92m   Compiling[0m darling_macro v0.20.11
+[1m[92m   Compiling[0m toml v0.8.23
+[1m[92m   Compiling[0m cranelift-native v0.106.2
+[1m[92m   Compiling[0m cranelift-frontend v0.106.2
+[1m[92m   Compiling[0m phf v0.11.3
+[1m[92m   Compiling[0m rustls-native-certs v0.8.4
+[1m[92m   Compiling[0m wasmtime-runtime v19.0.2
+[1m[92m   Compiling[0m wast v35.0.2
+[1m[92m   Compiling[0m itertools v0.14.0
+[1m[92m   Compiling[0m futures-executor v0.3.34
+[1m[92m   Compiling[0m libssh2-sys v0.3.3
+[1m[92m   Compiling[0m dirs-sys-next v0.1.2
+[1m[92m   Compiling[0m wasmtime-asm-macros v19.0.2
+[1m[92m   Compiling[0m cpufeatures v0.2.17
+[1m[92m   Compiling[0m unicode-width v0.2.2
+[1m[92m   Compiling[0m ryu v1.0.23
+[1m[92m   Compiling[0m adler2 v2.0.1
+[1m[92m   Compiling[0m base64 v0.22.1
+[1m[92m   Compiling[0m iana-time-zone v0.1.65
+[1m[92m   Compiling[0m byteorder v1.5.0
+[1m[92m   Compiling[0m simd-adler32 v0.3.10
+[1m[92m   Compiling[0m miniz_oxide v0.9.1
+[1m[92m   Compiling[0m fxhash v0.2.1
+[1m[92m   Compiling[0m wast v261.0.0
+[1m[92m   Compiling[0m prost-derive v0.14.4
+[1m[92m   Compiling[0m native-tls v0.2.18
+[1m[92m   Compiling[0m sha2 v0.10.9
+[1m[92m   Compiling[0m witx v0.9.1
+[1m[92m   Compiling[0m directories-next v2.0.0
+[1m[92m   Compiling[0m futures v0.3.34
+[1m[92m   Compiling[0m cranelift-wasm v0.106.2
+[1m[92m   Compiling[0m chrono-tz-build v0.2.1
+[1m[92m   Compiling[0m wasmtime-cranelift-shared v19.0.2
+[1m[92m   Compiling[0m darling v0.20.11
+[1m[92m   Compiling[0m zstd v0.13.3
+[1m[92m   Compiling[0m debugid v0.8.0
+[1m[92m   Compiling[0m rayon-core v1.13.0
+[1m[92m   Compiling[0m memoffset v0.9.1
+[1m[92m   Compiling[0m shellexpand v2.1.2
+[1m[92m   Compiling[0m cap-std v3.4.6
+[1m[92m   Compiling[0m wasmtime-wit-bindgen v19.0.2
+[1m[92m   Compiling[0m axum-core v0.5.6
+[1m[92m   Compiling[0m regex v1.13.1
+[1m[92m   Compiling[0m wasmtime-jit-debug v19.0.2
+[1m[92m   Compiling[0m memfd v0.6.6
+[1m[92m   Compiling[0m rand_core v0.6.4
+[1m[92m   Compiling[0m ppv-lite86 v0.2.21
+[1m[92m   Compiling[0m sqlite3-src v0.6.1
+[1m[92m   Compiling[0m wasmtime-wmemcheck v19.0.2
+[1m[92m   Compiling[0m sptr v0.3.2
+[1m[92m   Compiling[0m yansi v1.0.1
+[1m[92m   Compiling[0m matchit v0.8.4
+[1m[92m   Compiling[0m base64 v0.21.7
+[1m[92m   Compiling[0m wasmtime-cache v19.0.2
+[1m[92m   Compiling[0m axum v0.8.9
+[1m[92m   Compiling[0m proc-macro2-diagnostics v0.10.1
+[1m[92m   Compiling[0m pin-project v1.1.13
+[1m[92m   Compiling[0m rand_chacha v0.3.1
+[1m[92m   Compiling[0m wasmtime-component-macro v19.0.2
+[1m[92m   Compiling[0m wiggle-generate v19.0.2
+[1m[92m   Compiling[0m ittapi v0.4.0
+[1m[92m   Compiling[0m rayon v1.12.0
+[1m[92m   Compiling[0m fxprof-processed-profile v0.6.0
+[1m[92m   Compiling[0m derive_builder_core v0.20.2
+[1m[92m   Compiling[0m wasmtime-cranelift v19.0.2
+[1m[92m   Compiling[0m chrono-tz v0.8.6
+[1m[92m   Compiling[0m wat v1.261.0
+[1m[92m   Compiling[0m num-traits v0.2.19
+[1m[92m   Compiling[0m prost v0.14.4
+[1m[92m   Compiling[0m aws-lc-rs v1.13.3
+[1m[92m   Compiling[0m rustls v0.23.31
+[1m[92m   Compiling[0m flate2 v1.1.10
+[1m[92m   Compiling[0m signal-hook v0.3.18
+[1m[92m   Compiling[0m tower-http v0.6.11
+[1m[92m   Compiling[0m hyper-timeout v0.5.2
+[1m[92m   Compiling[0m addr2line v0.21.0
+[1m[92m   Compiling[0m tokio-stream v0.1.19
+[1m[92m   Compiling[0m libgit2-sys v0.16.2+1.7.2
+[1m[92m   Compiling[0m mio v0.8.11
+[1m[92m   Compiling[0m wasmtime-jit-icache-coherence v19.0.2
+[1m[92m   Compiling[0m wasmtime-slab v19.0.2
+[1m[92m   Compiling[0m allocator-api2 v0.2.21
+[1m[92m   Compiling[0m openssl-probe v0.1.6
+[1m[92m   Compiling[0m rustls-webpki v0.103.4
+[1m[92m   Compiling[0m foldhash v0.1.5
+[1m[92m   Compiling[0m hashbrown v0.15.5
+[1m[92m   Compiling[0m signal-hook-mio v0.2.5
+[1m[92m   Compiling[0m wasmtime v19.0.2
+[1m[92m   Compiling[0m tokio-native-tls v0.3.1
+[1m[92m   Compiling[0m chrono v0.4.45
+[1m[92m   Compiling[0m tokio-rustls v0.26.6
+[1m[92m   Compiling[0m hyper-rustls v0.27.10
+[1m[92m   Compiling[0m tonic v0.14.6
+[1m[92m   Compiling[0m rustls-platform-verifier v0.7.1
+[1m[92m   Compiling[0m derive_builder_macro v0.20.2
+[1m[92m   Compiling[0m wiggle-macro v19.0.2
+[1m[92m   Compiling[0m rand v0.8.8
+[1m[92m   Compiling[0m strum v0.26.3
+[1m[92m   Compiling[0m pear_codegen v0.2.9
+[1m[92m   Compiling[0m serde_urlencoded v0.7.1
+[1m[92m   Compiling[0m castaway v0.2.4
+[1m[92m   Compiling[0m itertools v0.13.0
+[1m[92m   Compiling[0m rustls-pemfile v2.2.0
+[1m[92m   Compiling[0m webpki-roots v1.0.9
+[1m[92m   Compiling[0m sqlite-vec v0.1.9
+[1m[92m   Compiling[0m tree-sitter-javascript v0.21.4
+[1m[92m   Compiling[0m tree-sitter-python v0.21.0
+[1m[92m   Compiling[0m tree-sitter-rust v0.21.2
+[1m[92m   Compiling[0m serde_with v3.24.0
+[1m[92m   Compiling[0m num_cpus v1.17.0
+[1m[92m   Compiling[0m retain_mut v0.1.9
+[1m[92m   Compiling[0m deadpool-runtime v0.1.4
+[1m[92m   Compiling[0m lazy_static v1.5.1
+[1m[92m   Compiling[0m unicode-width v0.1.14
+[1m[92m   Compiling[0m static_assertions v1.1.0
+[1m[92m   Compiling[0m inlinable_string v0.1.15
+[1m[92m   Compiling[0m unicode-segmentation v1.13.3
+[1m[92m   Compiling[0m hex v0.4.3
+[1m[92m   Compiling[0m hyperlocal-next v0.9.0
+[1m[92m   Compiling[0m bollard-stubs v1.44.0-rc.2
+[1m[92m   Compiling[0m unicode-truncate v1.1.0
+[1m[92m   Compiling[0m pear v0.2.9
+[1m[92m   Compiling[0m compact_str v0.7.1
+[1m[92m   Compiling[0m sharded-slab v0.1.7
+[1m[92m   Compiling[0m deadpool v0.9.5
+[1m[92m   Compiling[0m thiserror v2.0.21
+[1m[92m   Compiling[0m webpki-roots v0.26.11
+[1m[92m   Compiling[0m rustls-native-certs v0.7.3
+[1m[92m   Compiling[0m sqlite3-sys v0.17.0
+[1m[92m   Compiling[0m cap-rand v3.4.6
+[1m[92m   Compiling[0m wiggle v19.0.2
+[1m[92m   Compiling[0m derive_builder v0.20.2
+[1m[92m   Compiling[0m reqwest v0.13.5
+[1m[92m   Compiling[0m tonic-prost v0.14.6
+[1m[92m   Compiling[0m hyper-tls v0.6.0
+[1m[92m   Compiling[0m uncased v0.9.10
+[1m[92m   Compiling[0m cap-fs-ext v3.4.6
+[1m[92m   Compiling[0m system-interface v0.27.3
+[1m[92m   Compiling[0m crossterm v0.27.0
+[1m[92m   Compiling[0m lru v0.12.5
+[1m[92m   Compiling[0m prost-types v0.14.4
+[1m[92m   Compiling[0m cap-net-ext v3.4.6
+[1m[92m   Compiling[0m cap-time-ext v3.4.6
+[1m[92m   Compiling[0m matchers v0.2.0
+[1m[92m   Compiling[0m dashmap v6.2.1
+[1m[92m   Compiling[0m tracing-log v0.2.0
+[1m[92m   Compiling[0m thread_local v1.1.10
+[1m[92m   Compiling[0m fixedbitset v0.4.2
+[1m[92m   Compiling[0m cassowary v0.3.0
+[1m[92m   Compiling[0m nu-ansi-term v0.50.3
+[1m[92m   Compiling[0m tracing-subscriber v0.3.23
+[1m[92m   Compiling[0m ratatui v0.26.3
+[1m[92m   Compiling[0m petgraph v0.6.5
+[1m[92m   Compiling[0m neo4rs v0.7.3
+[1m[92m   Compiling[0m ractor v0.10.4
+[1m[92m   Compiling[0m wasmtime-wasi v19.0.2
+[1m[92m   Compiling[0m qdrant-client v1.19.0
+[1m[92m   Compiling[0m figment v0.10.19
+[1m[92m   Compiling[0m reqwest v0.12.28
+[1m[92m   Compiling[0m bollard v0.16.1
+[1m[92m   Compiling[0m sqlite v0.36.2
+[1m[92m   Compiling[0m git2 v0.18.3
+[1m[92m   Compiling[0m echo-rust v0.2.0 (/home/runner/work/Echo-Rust/Echo-Rust)
+[1m[33mwarning[0m[1m: variants `ParseFile` and `QueryDependencies` are never constructed[0m
+  [1m[94m--> [0msrc/actors/ast_actor.rs:49:5
+   [1m[94m|[0m
+[1m[94m48[0m [1m[94m|[0m pub enum AstMessage {
+   [1m[94m|[0m          [1m[94m----------[0m [1m[94mvariants in this enum[0m
+[1m[94m49[0m [1m[94m|[0m     ParseFile {
+   [1m[94m|[0m     [1m[33m^^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m55[0m [1m[94m|[0m     QueryDependencies {
+   [1m[94m|[0m     [1m[33m^^^^^^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `AstMessage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   [1m[94m= [0m[1mnote[0m: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+[1m[33mwarning[0m[1m: variants `Clone`, `Checkout`, and `ListFiles` are never constructed[0m
+  [1m[94m--> [0msrc/actors/git_actor.rs:13:5
+   [1m[94m|[0m
+[1m[94m11[0m [1m[94m|[0m pub enum GitMessage {
+   [1m[94m|[0m          [1m[94m----------[0m [1m[94mvariants in this enum[0m
+[1m[94m12[0m [1m[94m|[0m     /// Clone un dépôt et retourne le chemin local.
+[1m[94m13[0m [1m[94m|[0m     Clone {
+   [1m[94m|[0m     [1m[33m^^^^^[0m
+[1m[94m...[0m
+[1m[94m18[0m [1m[94m|[0m     Checkout {
+   [1m[94m|[0m     [1m[33m^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m24[0m [1m[94m|[0m     ListFiles {
+   [1m[94m|[0m     [1m[33m^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `GitMessage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+[1m[33mwarning[0m[1m: variant `Chat` is never constructed[0m
+  [1m[94m--> [0msrc/actors/llm_actor.rs:36:5
+   [1m[94m|[0m
+[1m[94m35[0m [1m[94m|[0m pub enum LlmMessage {
+   [1m[94m|[0m          [1m[94m----------[0m [1m[94mvariant in this enum[0m
+[1m[94m36[0m [1m[94m|[0m     Chat {
+   [1m[94m|[0m     [1m[33m^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `LlmMessage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+[1m[33mwarning[0m[1m: fields `stdout`, `stderr`, `exit_code`, and `elapsed_ms` are never read[0m
+  [1m[94m--> [0msrc/actors/sandbox_actor.rs:16:9
+   [1m[94m|[0m
+[1m[94m15[0m [1m[94m|[0m pub struct ExecResult {
+   [1m[94m|[0m            [1m[94m----------[0m [1m[94mfields in this struct[0m
+[1m[94m16[0m [1m[94m|[0m     pub stdout: String,
+   [1m[94m|[0m         [1m[33m^^^^^^[0m
+[1m[94m17[0m [1m[94m|[0m     pub stderr: String,
+   [1m[94m|[0m         [1m[33m^^^^^^[0m
+[1m[94m18[0m [1m[94m|[0m     pub exit_code: i32,
+   [1m[94m|[0m         [1m[33m^^^^^^^^^[0m
+[1m[94m19[0m [1m[94m|[0m     pub elapsed_ms: u64,
+   [1m[94m|[0m         [1m[33m^^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `ExecResult` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+[1m[33mwarning[0m[1m: method `ok` is never used[0m
+  [1m[94m--> [0msrc/actors/sandbox_actor.rs:23:12
+   [1m[94m|[0m
+[1m[94m22[0m [1m[94m|[0m impl ExecResult {
+   [1m[94m|[0m [1m[94m---------------[0m [1m[94mmethod in this implementation[0m
+[1m[94m23[0m [1m[94m|[0m     pub fn ok(&self) -> bool {
+   [1m[94m|[0m            [1m[33m^^[0m
+
+[1m[33mwarning[0m[1m: variant `Execute` is never constructed[0m
+  [1m[94m--> [0msrc/actors/sandbox_actor.rs:32:5
+   [1m[94m|[0m
+[1m[94m31[0m [1m[94m|[0m pub enum SandboxMessage {
+   [1m[94m|[0m          [1m[94m--------------[0m [1m[94mvariant in this enum[0m
+[1m[94m32[0m [1m[94m|[0m     Execute {
+   [1m[94m|[0m     [1m[33m^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `SandboxMessage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+[1m[33mwarning[0m[1m: fields `neo4j` and `idx_map` are never read[0m
+  [1m[94m--> [0msrc/services/graph_service.rs:31:5
+   [1m[94m|[0m
+[1m[94m30[0m [1m[94m|[0m pub struct GraphService {
+   [1m[94m|[0m            [1m[94m------------[0m [1m[94mfields in this struct[0m
+[1m[94m31[0m [1m[94m|[0m     neo4j: Option<Graph>,
+   [1m[94m|[0m     [1m[33m^^^^^[0m
+[1m[94m32[0m [1m[94m|[0m     local: DiGraph<CodeNode, CodeEdge>,
+[1m[94m33[0m [1m[94m|[0m     idx_map: HashMap<String, petgraph::graph::NodeIndex>,
+   [1m[94m|[0m     [1m[33m^^^^^^^[0m
+
+[1m[33mwarning[0m[1m: methods `add_node`, `add_edge`, and `dependencies` are never used[0m
+   [1m[94m--> [0msrc/services/graph_service.rs:64:18
+    [1m[94m|[0m
+[1m[94m 36[0m [1m[94m|[0m impl GraphService {
+    [1m[94m|[0m [1m[94m-----------------[0m [1m[94mmethods in this implementation[0m
+[1m[94m...[0m
+[1m[94m 64[0m [1m[94m|[0m     pub async fn add_node(&mut self, node: CodeNode) -> Result<()> {
+    [1m[94m|[0m                  [1m[33m^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m 85[0m [1m[94m|[0m     pub async fn add_edge(&mut self, edge: CodeEdge) -> Result<()> {
+    [1m[94m|[0m                  [1m[33m^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m108[0m [1m[94m|[0m     pub fn dependencies(&self, node_id: &str, depth: usize) -> Vec<String> {
+    [1m[94m|[0m            [1m[33m^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m: field `workspace` is never read[0m
+  [1m[94m--> [0msrc/services/tool_executor.rs:10:5
+   [1m[94m|[0m
+[1m[94m 9[0m [1m[94m|[0m pub struct ToolExecutor {
+   [1m[94m|[0m            [1m[94m------------[0m [1m[94mfield in this struct[0m
+[1m[94m10[0m [1m[94m|[0m     workspace: PathBuf,
+   [1m[94m|[0m     [1m[33m^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m: methods `run`, `grep`, `read_file`, `write_file`, `list_files`, and `bash` are never used[0m
+   [1m[94m--> [0msrc/services/tool_executor.rs:19:18
+    [1m[94m|[0m
+[1m[94m 13[0m [1m[94m|[0m impl ToolExecutor {
+    [1m[94m|[0m [1m[94m-----------------[0m [1m[94mmethods in this implementation[0m
+[1m[94m...[0m
+[1m[94m 19[0m [1m[94m|[0m     pub async fn run(&self, tool: &str, args: &Value) -> Result<Value> {
+    [1m[94m|[0m                  [1m[33m^^^[0m
+[1m[94m...[0m
+[1m[94m 34[0m [1m[94m|[0m     async fn grep(&self, args: &Value) -> Result<Value> {
+    [1m[94m|[0m              [1m[33m^^^^[0m
+[1m[94m...[0m
+[1m[94m 52[0m [1m[94m|[0m     async fn read_file(&self, args: &Value) -> Result<Value> {
+    [1m[94m|[0m              [1m[33m^^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m 66[0m [1m[94m|[0m     async fn write_file(&self, args: &Value) -> Result<Value> {
+    [1m[94m|[0m              [1m[33m^^^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m 84[0m [1m[94m|[0m     async fn list_files(&self, args: &Value) -> Result<Value> {
+    [1m[94m|[0m              [1m[33m^^^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m105[0m [1m[94m|[0m     async fn bash(&self, args: &Value) -> Result<Value> {
+    [1m[94m|[0m              [1m[33m^^^^[0m
+
+[1m[33mwarning[0m[1m: struct `CodeChunk` is never constructed[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:10:12
+   [1m[94m|[0m
+[1m[94m10[0m [1m[94m|[0m pub struct CodeChunk {
+   [1m[94m|[0m            [1m[33m^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m: struct `Hit` is never constructed[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:21:12
+   [1m[94m|[0m
+[1m[94m21[0m [1m[94m|[0m pub struct Hit {
+   [1m[94m|[0m            [1m[33m^^^[0m
+
+[1m[33mwarning[0m[1m: trait `VectorBackend` is never used[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:29:11
+   [1m[94m|[0m
+[1m[94m29[0m [1m[94m|[0m pub trait VectorBackend: Send + Sync {
+   [1m[94m|[0m           [1m[33m^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m: struct `SqliteVecBackend` is never constructed[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:36:12
+   [1m[94m|[0m
+[1m[94m36[0m [1m[94m|[0m pub struct SqliteVecBackend {
+   [1m[94m|[0m            [1m[33m^^^^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m: associated function `new` is never used[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:41:12
+   [1m[94m|[0m
+[1m[94m40[0m [1m[94m|[0m impl SqliteVecBackend {
+   [1m[94m|[0m [1m[94m---------------------[0m [1m[94massociated function in this implementation[0m
+[1m[94m41[0m [1m[94m|[0m     pub fn new(path: &str) -> Result<Self> {
+   [1m[94m|[0m            [1m[33m^^^[0m
+
+[1m[33mwarning[0m[1m: struct `QdrantBackend` is never constructed[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:63:12
+   [1m[94m|[0m
+[1m[94m63[0m [1m[94m|[0m pub struct QdrantBackend {
+   [1m[94m|[0m            [1m[33m^^^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m: associated function `new` is never used[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:68:12
+   [1m[94m|[0m
+[1m[94m67[0m [1m[94m|[0m impl QdrantBackend {
+   [1m[94m|[0m [1m[94m------------------[0m [1m[94massociated function in this implementation[0m
+[1m[94m68[0m [1m[94m|[0m     pub fn new(url: &str) -> Self {
+   [1m[94m|[0m            [1m[33m^^^[0m
+
+[1m[33mwarning[0m[1m: struct `VectorStore` is never constructed[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:88:12
+   [1m[94m|[0m
+[1m[94m88[0m [1m[94m|[0m pub struct VectorStore {
+   [1m[94m|[0m            [1m[33m^^^^^^^^^^^[0m
+
+[1m[33mwarning[0m[1m: associated items `sqlite`, `qdrant`, `upsert`, and `search` are never used[0m
+   [1m[94m--> [0msrc/services/vector_store.rs:93:12
+    [1m[94m|[0m
+[1m[94m 92[0m [1m[94m|[0m impl VectorStore {
+    [1m[94m|[0m [1m[94m----------------[0m [1m[94massociated items in this implementation[0m
+[1m[94m 93[0m [1m[94m|[0m     pub fn sqlite(path: &str) -> Result<Self> {
+    [1m[94m|[0m            [1m[33m^^^^^^[0m
+[1m[94m...[0m
+[1m[94m 99[0m [1m[94m|[0m     pub fn qdrant(url: &str) -> Self {
+    [1m[94m|[0m            [1m[33m^^^^^^[0m
+[1m[94m...[0m
+[1m[94m105[0m [1m[94m|[0m     pub async fn upsert(&self, chunk: &CodeChunk) -> Result<()> {
+    [1m[94m|[0m                  [1m[33m^^^^^^[0m
+[1m[94m...[0m
+[1m[94m109[0m [1m[94m|[0m     pub async fn search(&self, vec: &[f32], top_k: usize) -> Result<Vec<Hit>> {
+    [1m[94m|[0m                  [1m[33m^^^^^^[0m
+
+[1m[33mwarning[0m: `echo-rust` (bin "echo-rust" test) generated 19 warnings
+[1m[33mwarning[0m[1m: unused dependency `qdrant-client`[0m
+  [1m[94m--> [0mCargo.toml:46:1
+   [1m[94m|[0m
+[1m[94m46[0m [1m[94m|[0m qdrant-client = "1.10"
+   [1m[94m|[0m [1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `cargo::unused_dependencies` is set to `warn` by default
+[1m[96mhelp[0m: consider removing the dependency on `qdrant-client`
+[1m[33mwarning[0m[1m: unused dependency `sqlite`[0m
+  [1m[94m--> [0mCargo.toml:47:1
+   [1m[94m|[0m
+[1m[94m47[0m [1m[94m|[0m sqlite        = "0.36"
+   [1m[94m|[0m [1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: consider removing the dependency on `sqlite`
+[1m[33mwarning[0m[1m: unused dependency `sqlite-vec`[0m
+  [1m[94m--> [0mCargo.toml:48:1
+   [1m[94m|[0m
+[1m[94m48[0m [1m[94m|[0m sqlite-vec    = "0.1"
+   [1m[94m|[0m [1m[33m^^^^^^^^^^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: consider removing the dependency on `sqlite-vec`
+[1m[33mwarning[0m[1m: unused dependency `wasmtime-wasi`[0m
+  [1m[94m--> [0mCargo.toml:52:1
+   [1m[94m|[0m
+[1m[94m52[0m [1m[94m|[0m wasmtime-wasi = "19"
+   [1m[94m|[0m [1m[33m^^^^^^^^^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: consider removing the dependency on `wasmtime-wasi`
+[1m[33mwarning[0m: `echo-rust` (manifest) generated 4 warnings
+[1m[92m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 1m 45s
+[1m[92m     Running[0m unittests src/main.rs (target/debug/build/echo-rust/f62877f3ee652cd0/out/echo_rust-f62877f3ee652cd0)
+
+running 12 tests
+test actors::ast_actor::tests::contains_edges_link_class_to_method ... ok
+test actors::ast_actor::tests::line_numbers_are_one_based ... ok
+test actors::ast_actor::tests::find_deps_returns_contained_symbols ... ok
+test actors::ast_actor::tests::unsupported_language_is_rejected ... ok
+test actors::ast_actor::tests::parses_python_functions_classes_imports ... ok
+test actors::ast_actor::tests::parses_rust_functions ... FAILED
+test actors::ast_actor::tests::petgraph_conversion_preserves_counts ... ok
+test config::tests::defaults_are_sane_and_safe ... ok
+test state::graph::tests::zero_max_iterations_fails_immediately ... ok
+test config::tests::env_overrides_win ... FAILED
+test config::tests::full_toml_is_parsed ... ok
+test state::graph::tests::workflow_reaches_done_and_produces_script ... ok
+
+failures:
+
+---- actors::ast_actor::tests::parses_rust_functions stdout ----
+
+thread 'actors::ast_actor::tests::parses_rust_functions' (14043) panicked at src/actors/ast_actor.rs:291:9:
+assertion failed: g.nodes.values().any(|n|
+        n.kind == "function_declaration" && n.name == "compute")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- config::tests::env_overrides_win stdout ----
+
+thread 'config::tests::env_overrides_win' (14047) panicked at src/config.rs:226:34:
+config par env: missing field `api_key` for key "LLM" in `ECHO_` environment variable(s)
+
+
+failures:
+    actors::ast_actor::tests::parses_rust_functions
+    config::tests::env_overrides_win
+
+test result: FAILED. 10 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+[1m[91merror[0m: test failed, to rerun pass `--bin echo-rust`

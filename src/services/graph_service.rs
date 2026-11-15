@@ -1,11 +1,11 @@
 //! GraphService — Neo4j (distribué) + petgraph (in-memory).
 
-use anyhow::{Context, Result};
+use crate::config::Neo4jConfig;
+use anyhow::Result;
 use neo4rs::{query, Graph};
 use petgraph::graph::DiGraph;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use crate::config::Neo4jConfig;
 
 // ─── Types ────────────────────────────────────────────────────────────
 
@@ -96,10 +96,7 @@ impl GraphService {
             .await?;
         }
 
-        if let (Some(&a), Some(&b)) = (
-            self.idx_map.get(&edge.from),
-            self.idx_map.get(&edge.to),
-        ) {
+        if let (Some(&a), Some(&b)) = (self.idx_map.get(&edge.from), self.idx_map.get(&edge.to)) {
             self.local.add_edge(a, b, edge);
         }
         Ok(())

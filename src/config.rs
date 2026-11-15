@@ -202,7 +202,10 @@ enable_self_healing = false
 enable_hybrid_rag = false
 parallel_workers = 1
 "#;
-        let s: Settings = Figment::new().merge(Toml::string(toml)).extract().expect("toml valide");
+        let s: Settings = Figment::new()
+            .merge(Toml::string(toml))
+            .extract()
+            .expect("toml valide");
         assert_eq!(s.llm.model, "test-model");
         assert_eq!(s.llm.temperature, 0.7);
         assert_eq!(s.sandbox.mode, "docker");

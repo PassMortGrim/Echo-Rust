@@ -19,10 +19,10 @@ impl ToolExecutor {
     pub async fn run(&self, tool: &str, args: &Value) -> Result<Value> {
         match tool {
             "grep_codebase" => self.grep(args).await,
-            "read_file"     => self.read_file(args).await,
-            "write_file"    => self.write_file(args).await,
-            "list_files"    => self.list_files(args).await,
-            "execute_bash"  => self.bash(args).await,
+            "read_file" => self.read_file(args).await,
+            "write_file" => self.write_file(args).await,
+            "list_files" => self.list_files(args).await,
+            "execute_bash" => self.bash(args).await,
             other => Ok(serde_json::json!({
                 "error": format!("outil inconnu : {other}")
             })),
@@ -32,9 +32,7 @@ impl ToolExecutor {
     // ── grep ──────────────────────────────────────────────────────────
 
     async fn grep(&self, args: &Value) -> Result<Value> {
-        let pattern = args["pattern"]
-            .as_str()
-            .context("pattern manquant")?;
+        let pattern = args["pattern"].as_str().context("pattern manquant")?;
 
         let out = Command::new("grep")
             .args(["-r", "-n", "-E", pattern])
@@ -66,7 +64,7 @@ impl ToolExecutor {
     // ── write_file ────────────────────────────────────────────────────
 
     async fn write_file(&self, args: &Value) -> Result<Value> {
-        let path    = args["path"].as_str().context("path manquant")?;
+        let path = args["path"].as_str().context("path manquant")?;
         let content = args["content"].as_str().context("content manquant")?;
         let full = self.workspace.join(path);
 
@@ -91,7 +89,11 @@ impl ToolExecutor {
 
         while let Some(e) = entries.next_entry().await? {
             let name = e.file_name().to_string_lossy().into_owned();
-            let kind = if e.file_type().await?.is_dir() { "dir" } else { "file" };
+            let kind = if e.file_type().await?.is_dir() {
+                "dir"
+            } else {
+                "file"
+            };
             files.push(format!("{kind}:{name}"));
         }
 
@@ -105,8 +107,12 @@ impl ToolExecutor {
 
         // Liste noire minimale
         let blacklist: HashSet<&str> = [
-            "rm -rf /", "mkfs", "dd if=/dev/zero", ":(){:|:&};:",
-            "chmod -R 777 /", "> /dev/sda",
+            "rm -rf /",
+            "mkfs",
+            "dd if=/dev/zero",
+            ":(){:|:&};:",
+            "chmod -R 777 /",
+            "> /dev/sda",
         ]
         .into_iter()
         .collect();

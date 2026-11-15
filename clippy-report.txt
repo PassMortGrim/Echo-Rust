@@ -1,0 +1,261 @@
+[1m[92m    Checking[0m echo-rust v0.2.0 (/home/runner/work/Echo-Rust/Echo-Rust)
+[1m[91merror[0m[1m: method `to_petgraph` is never used[0m
+  [1m[94m--> [0msrc/actors/ast_actor.rs:29:12
+   [1m[94m|[0m
+[1m[94m28[0m [1m[94m|[0m impl CodeGraph {
+   [1m[94m|[0m [1m[94m--------------[0m [1m[94mmethod in this implementation[0m
+[1m[94m29[0m [1m[94m|[0m     pub fn to_petgraph(&self) -> DiGraph<AstNode, String> {
+   [1m[94m|[0m            [1m[91m^^^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `-D dead-code` implied by `-D warnings`
+   [1m[94m= [0m[1mhelp[0m: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+
+[1m[91merror[0m[1m: variants `ParseFile` and `QueryDependencies` are never constructed[0m
+  [1m[94m--> [0msrc/actors/ast_actor.rs:49:5
+   [1m[94m|[0m
+[1m[94m48[0m [1m[94m|[0m pub enum AstMessage {
+   [1m[94m|[0m          [1m[94m----------[0m [1m[94mvariants in this enum[0m
+[1m[94m49[0m [1m[94m|[0m     ParseFile {
+   [1m[94m|[0m     [1m[91m^^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m55[0m [1m[94m|[0m     QueryDependencies {
+   [1m[94m|[0m     [1m[91m^^^^^^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `AstMessage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+[1m[91merror[0m[1m: variants `Clone`, `Checkout`, and `ListFiles` are never constructed[0m
+  [1m[94m--> [0msrc/actors/git_actor.rs:13:5
+   [1m[94m|[0m
+[1m[94m11[0m [1m[94m|[0m pub enum GitMessage {
+   [1m[94m|[0m          [1m[94m----------[0m [1m[94mvariants in this enum[0m
+[1m[94m12[0m [1m[94m|[0m     /// Clone un dépôt et retourne le chemin local.
+[1m[94m13[0m [1m[94m|[0m     Clone {
+   [1m[94m|[0m     [1m[91m^^^^^[0m
+[1m[94m...[0m
+[1m[94m18[0m [1m[94m|[0m     Checkout {
+   [1m[94m|[0m     [1m[91m^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m24[0m [1m[94m|[0m     ListFiles {
+   [1m[94m|[0m     [1m[91m^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `GitMessage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+[1m[91merror[0m[1m: variant `Chat` is never constructed[0m
+  [1m[94m--> [0msrc/actors/llm_actor.rs:36:5
+   [1m[94m|[0m
+[1m[94m35[0m [1m[94m|[0m pub enum LlmMessage {
+   [1m[94m|[0m          [1m[94m----------[0m [1m[94mvariant in this enum[0m
+[1m[94m36[0m [1m[94m|[0m     Chat {
+   [1m[94m|[0m     [1m[91m^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `LlmMessage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+[1m[91merror[0m[1m: fields `stdout`, `stderr`, `exit_code`, and `elapsed_ms` are never read[0m
+  [1m[94m--> [0msrc/actors/sandbox_actor.rs:16:9
+   [1m[94m|[0m
+[1m[94m15[0m [1m[94m|[0m pub struct ExecResult {
+   [1m[94m|[0m            [1m[94m----------[0m [1m[94mfields in this struct[0m
+[1m[94m16[0m [1m[94m|[0m     pub stdout: String,
+   [1m[94m|[0m         [1m[91m^^^^^^[0m
+[1m[94m17[0m [1m[94m|[0m     pub stderr: String,
+   [1m[94m|[0m         [1m[91m^^^^^^[0m
+[1m[94m18[0m [1m[94m|[0m     pub exit_code: i32,
+   [1m[94m|[0m         [1m[91m^^^^^^^^^[0m
+[1m[94m19[0m [1m[94m|[0m     pub elapsed_ms: u64,
+   [1m[94m|[0m         [1m[91m^^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `ExecResult` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+[1m[91merror[0m[1m: method `ok` is never used[0m
+  [1m[94m--> [0msrc/actors/sandbox_actor.rs:23:12
+   [1m[94m|[0m
+[1m[94m22[0m [1m[94m|[0m impl ExecResult {
+   [1m[94m|[0m [1m[94m---------------[0m [1m[94mmethod in this implementation[0m
+[1m[94m23[0m [1m[94m|[0m     pub fn ok(&self) -> bool {
+   [1m[94m|[0m            [1m[91m^^[0m
+
+[1m[91merror[0m[1m: variant `Execute` is never constructed[0m
+  [1m[94m--> [0msrc/actors/sandbox_actor.rs:32:5
+   [1m[94m|[0m
+[1m[94m31[0m [1m[94m|[0m pub enum SandboxMessage {
+   [1m[94m|[0m          [1m[94m--------------[0m [1m[94mvariant in this enum[0m
+[1m[94m32[0m [1m[94m|[0m     Execute {
+   [1m[94m|[0m     [1m[91m^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `SandboxMessage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+[1m[91merror[0m[1m: fields `neo4j` and `idx_map` are never read[0m
+  [1m[94m--> [0msrc/services/graph_service.rs:31:5
+   [1m[94m|[0m
+[1m[94m30[0m [1m[94m|[0m pub struct GraphService {
+   [1m[94m|[0m            [1m[94m------------[0m [1m[94mfields in this struct[0m
+[1m[94m31[0m [1m[94m|[0m     neo4j: Option<Graph>,
+   [1m[94m|[0m     [1m[91m^^^^^[0m
+[1m[94m32[0m [1m[94m|[0m     local: DiGraph<CodeNode, CodeEdge>,
+[1m[94m33[0m [1m[94m|[0m     idx_map: HashMap<String, petgraph::graph::NodeIndex>,
+   [1m[94m|[0m     [1m[91m^^^^^^^[0m
+
+[1m[91merror[0m[1m: methods `add_node`, `add_edge`, and `dependencies` are never used[0m
+   [1m[94m--> [0msrc/services/graph_service.rs:64:18
+    [1m[94m|[0m
+[1m[94m 36[0m [1m[94m|[0m impl GraphService {
+    [1m[94m|[0m [1m[94m-----------------[0m [1m[94mmethods in this implementation[0m
+[1m[94m...[0m
+[1m[94m 64[0m [1m[94m|[0m     pub async fn add_node(&mut self, node: CodeNode) -> Result<()> {
+    [1m[94m|[0m                  [1m[91m^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m 85[0m [1m[94m|[0m     pub async fn add_edge(&mut self, edge: CodeEdge) -> Result<()> {
+    [1m[94m|[0m                  [1m[91m^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m108[0m [1m[94m|[0m     pub fn dependencies(&self, node_id: &str, depth: usize) -> Vec<String> {
+    [1m[94m|[0m            [1m[91m^^^^^^^^^^^^[0m
+
+[1m[91merror[0m[1m: field `workspace` is never read[0m
+  [1m[94m--> [0msrc/services/tool_executor.rs:10:5
+   [1m[94m|[0m
+[1m[94m 9[0m [1m[94m|[0m pub struct ToolExecutor {
+   [1m[94m|[0m            [1m[94m------------[0m [1m[94mfield in this struct[0m
+[1m[94m10[0m [1m[94m|[0m     workspace: PathBuf,
+   [1m[94m|[0m     [1m[91m^^^^^^^^^[0m
+
+[1m[91merror[0m[1m: methods `run`, `grep`, `read_file`, `write_file`, `list_files`, and `bash` are never used[0m
+   [1m[94m--> [0msrc/services/tool_executor.rs:19:18
+    [1m[94m|[0m
+[1m[94m 13[0m [1m[94m|[0m impl ToolExecutor {
+    [1m[94m|[0m [1m[94m-----------------[0m [1m[94mmethods in this implementation[0m
+[1m[94m...[0m
+[1m[94m 19[0m [1m[94m|[0m     pub async fn run(&self, tool: &str, args: &Value) -> Result<Value> {
+    [1m[94m|[0m                  [1m[91m^^^[0m
+[1m[94m...[0m
+[1m[94m 34[0m [1m[94m|[0m     async fn grep(&self, args: &Value) -> Result<Value> {
+    [1m[94m|[0m              [1m[91m^^^^[0m
+[1m[94m...[0m
+[1m[94m 52[0m [1m[94m|[0m     async fn read_file(&self, args: &Value) -> Result<Value> {
+    [1m[94m|[0m              [1m[91m^^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m 66[0m [1m[94m|[0m     async fn write_file(&self, args: &Value) -> Result<Value> {
+    [1m[94m|[0m              [1m[91m^^^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m 84[0m [1m[94m|[0m     async fn list_files(&self, args: &Value) -> Result<Value> {
+    [1m[94m|[0m              [1m[91m^^^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m105[0m [1m[94m|[0m     async fn bash(&self, args: &Value) -> Result<Value> {
+    [1m[94m|[0m              [1m[91m^^^^[0m
+
+[1m[91merror[0m[1m: struct `CodeChunk` is never constructed[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:10:12
+   [1m[94m|[0m
+[1m[94m10[0m [1m[94m|[0m pub struct CodeChunk {
+   [1m[94m|[0m            [1m[91m^^^^^^^^^[0m
+
+[1m[91merror[0m[1m: struct `Hit` is never constructed[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:21:12
+   [1m[94m|[0m
+[1m[94m21[0m [1m[94m|[0m pub struct Hit {
+   [1m[94m|[0m            [1m[91m^^^[0m
+
+[1m[91merror[0m[1m: trait `VectorBackend` is never used[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:29:11
+   [1m[94m|[0m
+[1m[94m29[0m [1m[94m|[0m pub trait VectorBackend: Send + Sync {
+   [1m[94m|[0m           [1m[91m^^^^^^^^^^^^^[0m
+
+[1m[91merror[0m[1m: struct `SqliteVecBackend` is never constructed[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:36:12
+   [1m[94m|[0m
+[1m[94m36[0m [1m[94m|[0m pub struct SqliteVecBackend {
+   [1m[94m|[0m            [1m[91m^^^^^^^^^^^^^^^^[0m
+
+[1m[91merror[0m[1m: associated function `new` is never used[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:41:12
+   [1m[94m|[0m
+[1m[94m40[0m [1m[94m|[0m impl SqliteVecBackend {
+   [1m[94m|[0m [1m[94m---------------------[0m [1m[94massociated function in this implementation[0m
+[1m[94m41[0m [1m[94m|[0m     pub fn new(path: &str) -> Result<Self> {
+   [1m[94m|[0m            [1m[91m^^^[0m
+
+[1m[91merror[0m[1m: struct `QdrantBackend` is never constructed[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:63:12
+   [1m[94m|[0m
+[1m[94m63[0m [1m[94m|[0m pub struct QdrantBackend {
+   [1m[94m|[0m            [1m[91m^^^^^^^^^^^^^[0m
+
+[1m[91merror[0m[1m: associated function `new` is never used[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:68:12
+   [1m[94m|[0m
+[1m[94m67[0m [1m[94m|[0m impl QdrantBackend {
+   [1m[94m|[0m [1m[94m------------------[0m [1m[94massociated function in this implementation[0m
+[1m[94m68[0m [1m[94m|[0m     pub fn new(url: &str) -> Self {
+   [1m[94m|[0m            [1m[91m^^^[0m
+
+[1m[91merror[0m[1m: struct `VectorStore` is never constructed[0m
+  [1m[94m--> [0msrc/services/vector_store.rs:88:12
+   [1m[94m|[0m
+[1m[94m88[0m [1m[94m|[0m pub struct VectorStore {
+   [1m[94m|[0m            [1m[91m^^^^^^^^^^^[0m
+
+[1m[91merror[0m[1m: associated items `sqlite`, `qdrant`, `upsert`, and `search` are never used[0m
+   [1m[94m--> [0msrc/services/vector_store.rs:93:12
+    [1m[94m|[0m
+[1m[94m 92[0m [1m[94m|[0m impl VectorStore {
+    [1m[94m|[0m [1m[94m----------------[0m [1m[94massociated items in this implementation[0m
+[1m[94m 93[0m [1m[94m|[0m     pub fn sqlite(path: &str) -> Result<Self> {
+    [1m[94m|[0m            [1m[91m^^^^^^[0m
+[1m[94m...[0m
+[1m[94m 99[0m [1m[94m|[0m     pub fn qdrant(url: &str) -> Self {
+    [1m[94m|[0m            [1m[91m^^^^^^[0m
+[1m[94m...[0m
+[1m[94m105[0m [1m[94m|[0m     pub async fn upsert(&self, chunk: &CodeChunk) -> Result<()> {
+    [1m[94m|[0m                  [1m[91m^^^^^^[0m
+[1m[94m...[0m
+[1m[94m109[0m [1m[94m|[0m     pub async fn search(&self, vec: &[f32], top_k: usize) -> Result<Vec<Hit>> {
+    [1m[94m|[0m                  [1m[91m^^^^^^[0m
+
+[1m[91merror[0m[1m: variants `ParseFile` and `QueryDependencies` are never constructed[0m
+  [1m[94m--> [0msrc/actors/ast_actor.rs:49:5
+   [1m[94m|[0m
+[1m[94m48[0m [1m[94m|[0m pub enum AstMessage {
+   [1m[94m|[0m          [1m[94m----------[0m [1m[94mvariants in this enum[0m
+[1m[94m49[0m [1m[94m|[0m     ParseFile {
+   [1m[94m|[0m     [1m[91m^^^^^^^^^[0m
+[1m[94m...[0m
+[1m[94m55[0m [1m[94m|[0m     QueryDependencies {
+   [1m[94m|[0m     [1m[91m^^^^^^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `AstMessage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   [1m[94m= [0m[1mnote[0m: `-D dead-code` implied by `-D warnings`
+   [1m[94m= [0m[1mhelp[0m: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+
+[1m[91merror[0m: could not compile `echo-rust` (bin "echo-rust") due to 20 previous errors
+[1m[33mwarning[0m: build failed, waiting for other jobs to finish...
+[1m[91merror[0m: could not compile `echo-rust` (bin "echo-rust" test) due to 19 previous errors
+[1m[33mwarning[0m[1m: unused dependency `qdrant-client`[0m
+  [1m[94m--> [0mCargo.toml:46:1
+   [1m[94m|[0m
+[1m[94m46[0m [1m[94m|[0m qdrant-client = "1.10"
+   [1m[94m|[0m [1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+   [1m[94m= [0m[1mnote[0m: `cargo::unused_dependencies` is set to `warn` by default
+[1m[96mhelp[0m: consider removing the dependency on `qdrant-client`
+[1m[33mwarning[0m[1m: unused dependency `sqlite`[0m
+  [1m[94m--> [0mCargo.toml:47:1
+   [1m[94m|[0m
+[1m[94m47[0m [1m[94m|[0m sqlite        = "0.36"
+   [1m[94m|[0m [1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: consider removing the dependency on `sqlite`
+[1m[33mwarning[0m[1m: unused dependency `sqlite-vec`[0m
+  [1m[94m--> [0mCargo.toml:48:1
+   [1m[94m|[0m
+[1m[94m48[0m [1m[94m|[0m sqlite-vec    = "0.1"
+   [1m[94m|[0m [1m[33m^^^^^^^^^^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: consider removing the dependency on `sqlite-vec`
+[1m[33mwarning[0m[1m: unused dependency `wasmtime-wasi`[0m
+  [1m[94m--> [0mCargo.toml:52:1
+   [1m[94m|[0m
+[1m[94m52[0m [1m[94m|[0m wasmtime-wasi = "19"
+   [1m[94m|[0m [1m[33m^^^^^^^^^^^^^^^^^^^^[0m
+   [1m[94m|[0m
+[1m[96mhelp[0m: consider removing the dependency on `wasmtime-wasi`
+[1m[33mwarning[0m: `echo-rust` (manifest) generated 4 warnings

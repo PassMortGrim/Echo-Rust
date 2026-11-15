@@ -1,12 +1,12 @@
 //! SandboxActor — exécution isolée : Wasm (wasmtime) ou Docker (bollard).
 
+use crate::config::{DockerConfig, SandboxConfig, WasmConfig};
 use anyhow::{Context, Result};
 use bollard::container::{
     Config, CreateContainerOptions, RemoveContainerOptions, WaitContainerOptions,
 };
 use bollard::Docker;
 use ractor::{Actor, ActorProcessingErr, ActorRef, RpcReplyPort};
-use crate::config::{DockerConfig, SandboxConfig, WasmConfig};
 use wasmtime::*;
 
 // ─── Types ────────────────────────────────────────────────────────────
@@ -65,10 +65,7 @@ impl Actor for SandboxActor {
         _: ActorRef<Self::Msg>,
         _: (),
     ) -> Result<Self::State, ActorProcessingErr> {
-        tracing::info!(
-            "SandboxActor prêt (mode={})",
-            self.sandbox_cfg.mode
-        );
+        tracing::info!("SandboxActor prêt (mode={})", self.sandbox_cfg.mode);
         Ok(())
     }
 
@@ -79,7 +76,11 @@ impl Actor for SandboxActor {
         _: &mut Self::State,
     ) -> Result<(), ActorProcessingErr> {
         match msg {
-            SandboxMessage::Execute { code, language, reply } => {
+            SandboxMessage::Execute {
+                code,
+                language,
+                reply,
+            } => {
                 let result = if self.sandbox_cfg.mode == "wasm" && self.wasm_cfg.enabled {
                     self.run_wasm(&code, &language).await
                 } else {
@@ -132,8 +133,7 @@ impl SandboxActor {
         let t0 = std::time::Instant::now();
         tracing::debug!("Docker sandbox: {} ({} bytes)", lang, code.len());
 
-        let docker = Docker::connect_with_local_defaults()
-            .context("connexion Docker")?;
+        let docker = Docker::connect_with_local_defaults().context("connexion Docker")?;
 
         let (image, cmd): (&str, Vec<String>) = match lang.to_lowercase().as_str() {
             "python" => (
@@ -144,10 +144,7 @@ impl SandboxActor {
                 "node:20-slim",
                 vec!["node".into(), "-e".into(), code.into()],
             ),
-            "bash" | "shell" => (
-                "alpine:3",
-                vec!["sh".into(), "-c".into(), code.into()],
-            ),
+            "bash" | "shell" => ("alpine:3", vec!["sh".into(), "-c".into(), code.into()]),
             other => anyhow::bail!("langage non supporté : {other}"),
         };
 
@@ -166,14 +163,13 @@ impl SandboxActor {
         };
 
         let ctr = docker.create_container(Some(opts), cfg).await?;
-        docker
-            .start_container::<String>(&ctr.id, None)
-            .await?;
+        docker.start_container::<String>(&ctr.id, None).await?;
 
         // Attente de la fin
         // let mut exit_code = 1; -> Le champ status_code de Bollard est un i64, alors que ExecResult::exit_code est un i32
         let mut exit_code: i64 = 1;
-        let mut wait = docker.wait_container::<String>(&ctr.id, None::<WaitContainerOptions<String>>);
+        let mut wait =
+            docker.wait_container::<String>(&ctr.id, None::<WaitContainerOptions<String>>);
         use futures::StreamExt;
         while let Some(res) = wait.next().await {
             if let Ok(wr) = res {

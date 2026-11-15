@@ -1,6 +1,6 @@
 //! VectorStore — recherche sémantique (Qdrant ou SQLite-vec).
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

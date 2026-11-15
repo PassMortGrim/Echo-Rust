@@ -1,10 +1,10 @@
 //! LlmActor — appels HTTP vers l'API LLM + gestion du tool-use.
 
+use crate::config::LlmConfig;
 use anyhow::{Context, Result};
 use ractor::{Actor, ActorProcessingErr, ActorRef, RpcReplyPort};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use crate::config::LlmConfig;
 
 // ─── Types ────────────────────────────────────────────────────────────
 
@@ -206,6 +206,10 @@ impl LlmActor {
         };
 
         tracing::debug!("LLM → {} tokens", usage.total);
-        Ok(LlmResponse { content, tool_calls, usage })
+        Ok(LlmResponse {
+            content,
+            tool_calls,
+            usage,
+        })
     }
 }

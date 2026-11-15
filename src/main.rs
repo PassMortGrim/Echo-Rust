@@ -2,8 +2,8 @@
 //!
 //! Orchestration : config → acteurs → services → workflow → TUI/CLI.
 
-mod config;
 mod actors;
+mod config;
 mod services;
 mod state;
 mod tui;
@@ -50,13 +50,9 @@ async fn main() -> Result<()> {
     .await
     .context("spawn GitActor")?;
 
-    let (ast_ref, _) = Actor::spawn(
-        Some("ast".into()),
-        actors::AstActor,
-        (),
-    )
-    .await
-    .context("spawn AstActor")?;
+    let (ast_ref, _) = Actor::spawn(Some("ast".into()), actors::AstActor, ())
+        .await
+        .context("spawn AstActor")?;
 
     let (llm_ref, _) = Actor::spawn(
         Some("llm".into()),
@@ -68,11 +64,7 @@ async fn main() -> Result<()> {
 
     let (sandbox_ref, _) = Actor::spawn(
         Some("sandbox".into()),
-        actors::SandboxActor::new(
-            cfg.wasm.clone(),
-            cfg.docker.clone(),
-            cfg.sandbox.clone(),
-        ),
+        actors::SandboxActor::new(cfg.wasm.clone(), cfg.docker.clone(), cfg.sandbox.clone()),
         (),
     )
     .await
@@ -93,13 +85,13 @@ async fn main() -> Result<()> {
     // ── Arguments ─────────────────────────────────────────────────────
     let mut args = std::env::args().skip(1);
 
-    let repo_url = args.next().unwrap_or_else(|| {
-        "https://github.com/example/target-repo.git".to_string()
-    });
+    let repo_url = args
+        .next()
+        .unwrap_or_else(|| "https://github.com/example/target-repo.git".to_string());
 
-    let issue = args.next().unwrap_or_else(|| {
-        "NullPointerError dans user_auth lors du traitement OAuth".to_string()
-    });
+    let issue = args
+        .next()
+        .unwrap_or_else(|| "NullPointerError dans user_auth lors du traitement OAuth".to_string());
 
     tracing::info!("Dépôt cible : {repo_url}");
     tracing::info!("Issue : {issue}");
@@ -114,10 +106,7 @@ async fn main() -> Result<()> {
     let shared_state = Arc::new(Mutex::new(initial.clone()));
 
     // ── Workflow ──────────────────────────────────────────────────────
-    let workflow = AgentWorkflow::new(
-        cfg.agent.max_iterations,
-        cfg.agent.enable_self_healing,
-    );
+    let workflow = AgentWorkflow::new(cfg.agent.max_iterations, cfg.agent.enable_self_healing);
 
     let use_tui = std::env::var("ECHO_TUI")
         .map(|v| v == "true")
@@ -134,7 +123,11 @@ async fn main() -> Result<()> {
         app.run().await?;
 
         let final_state = handle.await??;
-        tracing::info!("Terminé — phase={}, iters={}", final_state.phase, final_state.iteration);
+        tracing::info!(
+            "Terminé — phase={}, iters={}",
+            final_state.phase,
+            final_state.iteration
+        );
     } else {
         tracing::info!("Mode CLI");
 
@@ -145,7 +138,10 @@ async fn main() -> Result<()> {
         tracing::info!("  Itérations : {}", final_state.iteration);
         tracing::info!(
             "  Script     : {}",
-            final_state.reproduction_script.as_deref().unwrap_or("aucun")
+            final_state
+                .reproduction_script
+                .as_deref()
+                .unwrap_or("aucun")
         );
     }
 
