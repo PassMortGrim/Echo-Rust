@@ -8,8 +8,8 @@ pub mod git_actor;
 pub mod llm_actor;
 pub mod sandbox_actor;
 
-// Ré-exports pour simplifier les imports côté main.rs
-pub use ast_actor::AstActor;
-pub use git_actor::GitActor;
-pub use llm_actor::LlmActor;
-pub use sandbox_actor::SandboxActor;
+// Ré-exports pour simplifier les imports côté main.rs et state/graph.rs
+pub use ast_actor::{AstActor, AstMessage};
+pub use git_actor::{GitActor, GitMessage};
+pub use llm_actor::{LlmActor, LlmMessage};
+pub use sandbox_actor::{SandboxActor, SandboxMessage};

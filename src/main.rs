@@ -84,8 +84,9 @@ async fn main() -> Result<()> {
     let (n, e) = graph_svc.stats();
     tracing::info!("GraphService OK ({n} nœuds, {e} arêtes)");
 
-    let _tool_exec = services::ToolExecutor::new(workspace.clone());
-    tracing::info!("ToolExecutor OK");
+    // ToolExecutor : instancié PAR le workflow, raciné sur chaque dépôt cloné
+    // (voir state/graph.rs — génération ReAct et self-healing).
+    tracing::info!("ToolExecutor OK (branché au workflow, par dépôt cloné)");
 
     // ── Arguments ─────────────────────────────────────────────────────
     let mut args = std::env::args().skip(1);
@@ -107,7 +108,17 @@ async fn main() -> Result<()> {
     let shared_state = Arc::new(Mutex::new(initial.clone()));
 
     // ── Workflow ──────────────────────────────────────────────────────
-    let workflow = AgentWorkflow::new(cfg.agent.max_iterations, cfg.agent.enable_self_healing);
+    // Phase 1 : orchestration réelle — le workflow délègue à chaque acteur
+    // (clone → AST → LLM + tools → sandbox) puis boucle en self-healing.
+    let workflow = AgentWorkflow::new(
+        git_ref.clone(),
+        ast_ref.clone(),
+        llm_ref.clone(),
+        sandbox_ref.clone(),
+        workspace.clone(),
+        cfg.agent.max_iterations,
+        cfg.agent.enable_self_healing,
+    );
 
     let use_tui = std::env::var("ECHO_TUI")
         .map(|v| v == "true")
@@ -117,9 +128,9 @@ async fn main() -> Result<()> {
         tracing::info!("Mode TUI activé");
 
         let st = shared_state.clone();
-        let handle = tokio::spawn(async move { workflow.run(initial).await });
+        let handle = tokio::spawn(async move { workflow.run(initial, Some(st)).await });
 
-        let mut app = tui::TuiApp::new(st);
+        let mut app = tui::TuiApp::new(shared_state);
         app.push_log("Echo-Rust démarré".into());
         app.run().await?;
 
@@ -132,7 +143,7 @@ async fn main() -> Result<()> {
     } else {
         tracing::info!("Mode CLI");
 
-        let final_state = workflow.run(initial).await?;
+        let final_state = workflow.run(initial, Some(shared_state)).await?;
 
         tracing::info!("═══ Résultat ═══");
         tracing::info!("  Phase      : {}", final_state.phase);
