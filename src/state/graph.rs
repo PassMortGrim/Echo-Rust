@@ -11,7 +11,8 @@
 use crate::actors::ast_actor::CodeGraph;
 use crate::actors::llm_actor::LlmResponse;
 use crate::actors::sandbox_actor::ExecResult;
-use crate::actors::{AstMessage, GitMessage, LlmMessage, SandboxMessage};
+use crate::actors::{AstMessage, GitMessage, LlmMessage, SandboxMessage, VectorMessage};
+use crate::services::vector_store::CodeChunk;
 use crate::services::ToolExecutor;
 use anyhow::{Context, Result};
 use ractor::ActorRef;
@@ -32,6 +33,8 @@ pub struct AgentState {
     pub ast_nodes: usize,
     pub graph_edges: usize,
     pub reproduction_script: Option<String>,
+    /// Contexte RAG (résultats vectoriels passés au prompt de génération).
+    pub vector_context: Option<String>,
     pub phase: Phase,
     pub iteration: u32,
     pub history: Vec<String>,
@@ -77,6 +80,7 @@ impl AgentState {
             ast_nodes: 0,
             graph_edges: 0,
             reproduction_script: None,
+            vector_context: None,
             phase: Phase::Init,
             iteration: 0,
             history: Vec::new(),
@@ -101,6 +105,8 @@ const MAX_TOOL_ROUNDS: usize = 8;
 const MAX_LISTED_FILES_IN_PROMPT: usize = 100;
 /// Troncature des sorties d'exécution réinjectées au LLM (self-healing).
 const MAX_FEEDBACK_CHARS: usize = 1500;
+/// Nombre maximal de chunks (symboles AST) indexés vectoriellement.
+const MAX_VECTOR_CHUNKS: usize = 500;
 
 const SYSTEM_PROMPT: &str = "Tu es un agent de reproduction automatisée de bugs. \
 Tu peux explorer le dépôt cloné avec les outils fournis (grep_codebase, read_file, \
@@ -177,9 +183,13 @@ pub struct AgentWorkflow {
     ast: ActorRef<AstMessage>,
     llm: ActorRef<LlmMessage>,
     sandbox: ActorRef<SandboxMessage>,
+    /// Indexation vectorielle (optionnelle — None si backend "off").
+    vector: Option<ActorRef<VectorMessage>>,
     workspace: PathBuf,
     max_iter: u32,
     self_heal: bool,
+    /// Nombre de résultats vectoriels injectés dans le prompt.
+    top_k: usize,
 }
 
 impl AgentWorkflow {
@@ -189,18 +199,22 @@ impl AgentWorkflow {
         ast: ActorRef<AstMessage>,
         llm: ActorRef<LlmMessage>,
         sandbox: ActorRef<SandboxMessage>,
+        vector: Option<ActorRef<VectorMessage>>,
         workspace: PathBuf,
         max_iter: u32,
         self_heal: bool,
+        top_k: usize,
     ) -> Self {
         Self {
             git,
             ast,
             llm,
             sandbox,
+            vector,
             workspace,
             max_iter,
             self_heal,
+            top_k,
         }
     }
 
@@ -221,6 +235,7 @@ impl AgentWorkflow {
         shared: Option<Arc<Mutex<AgentState>>>,
     ) -> Result<AgentState> {
         let mut index: Option<RepositoryIndex> = None;
+        let mut pending_chunks: Vec<CodeChunk> = Vec::new();
         let mut script_lang = String::from("python");
         let mut last_failure: Option<ExecResult> = None;
 
@@ -253,7 +268,7 @@ impl AgentWorkflow {
                 Phase::ParseAst => {
                     st.log("parsing AST (AstActor, tree-sitter)…");
                     match self.parse_repository(&st).await {
-                        Ok(idx) => {
+                        Ok((idx, chunks)) => {
                             st.ast_nodes = idx.node_count;
                             st.graph_edges = idx.edge_count;
                             st.log(&format!(
@@ -262,6 +277,7 @@ impl AgentWorkflow {
                                 idx.node_count,
                                 idx.edge_count
                             ));
+                            pending_chunks = chunks;
                             index = Some(idx);
                             st.phase = Phase::BuildGraph;
                         }
@@ -277,13 +293,85 @@ impl AgentWorkflow {
                         None => (st.ast_nodes, st.graph_edges),
                     };
                     st.log(&format!("graphe de connaissances : {n} nœuds, {e} arêtes"));
+                    // Ingestion vectorielle (best-effort : ne bloque pas le workflow).
+                    if self.vector.is_some() {
+                        if !pending_chunks.is_empty() {
+                            let to_ingest: Vec<CodeChunk> =
+                                pending_chunks.drain(..).take(MAX_VECTOR_CHUNKS).collect();
+                            match self.vector_ingest(to_ingest.clone()).await {
+                                Ok((count, encoder)) => {
+                                    st.log(&format!(
+                                        "index vectoriel : {count} chunk(s) indexés (encoder={encoder})"
+                                    ));
+                                }
+                                Err(err) => {
+                                    pending_chunks = to_ingest;
+                                    tracing::warn!("ingestion vectorielle impossible : {err}");
+                                    st.log("index vectoriel indisponible (workflow sans RAG)");
+                                }
+                            }
+                        }
+                    } else {
+                        pending_chunks.clear();
+                    }
                     st.phase = Phase::RagSearch;
                 }
 
                 Phase::RagSearch => {
-                    // Phase 1 : contexte = symboles AST + arborescence.
-                    // L'index vectoriel (SQLite-Vec / Qdrant) arrive en Phase 3.
-                    st.log("contexte constitué depuis le graphe (RAG vectoriel : Phase 3)");
+                    // Contexte = symboles AST + arborescence + RAG vectoriel.
+                    if self.vector.is_some() {
+                        match self.vector_search(&st.issue, self.top_k).await {
+                            Ok(outcome) => {
+                                if outcome.hits.is_empty() {
+                                    st.log("recherche vectorielle : aucun résultat");
+                                } else if outcome.degraded() {
+                                    st.log(&format!(
+                                        "recherche vectorielle DÉGRADÉE (encoder=hash) : {} résultat(s)",
+                                        outcome.hits.len()
+                                    ));
+                                } else {
+                                    st.log(&format!(
+                                        "recherche vectorielle : {} résultat(s) (encoder={})",
+                                        outcome.hits.len(),
+                                        outcome.encoder
+                                    ));
+                                }
+                                let mut ctx = String::from("== Contexte vectoriel ");
+                                if outcome.degraded() {
+                                    ctx.push_str(
+                                        "(index dégradé : encodage de test, qualité indicative) ",
+                                    );
+                                }
+                                ctx.push_str("==\n");
+                                for hit in &outcome.hits {
+                                    let kind =
+                                        hit.chunk.metadata.get("kind").cloned().unwrap_or_default();
+                                    let symbol = hit
+                                        .chunk
+                                        .metadata
+                                        .get("symbol")
+                                        .cloned()
+                                        .unwrap_or_default();
+                                    ctx.push_str(&format!(
+                                        "- {} {} ({}:{}-{}) : {}\n",
+                                        kind,
+                                        symbol,
+                                        hit.chunk.file,
+                                        hit.chunk.start_line,
+                                        hit.chunk.end_line,
+                                        truncate(&hit.chunk.content, 200)
+                                    ));
+                                }
+                                st.vector_context = Some(ctx);
+                            }
+                            Err(err) => {
+                                tracing::warn!("recherche vectorielle impossible : {err}");
+                                st.log("recherche vectorielle indisponible");
+                            }
+                        }
+                    } else {
+                        st.log("contexte constitué depuis le graphe (RAG vectoriel désactivé)");
+                    }
                     st.phase = Phase::GenerateScript;
                 }
 
@@ -298,7 +386,12 @@ impl AgentWorkflow {
                         }
                     };
                     match self
-                        .generate_script(&st, index_ref, last_failure.as_ref())
+                        .generate_script(
+                            &st,
+                            index_ref,
+                            last_failure.as_ref(),
+                            st.vector_context.as_deref(),
+                        )
                         .await
                     {
                         Ok((code, lang)) => {
@@ -392,7 +485,7 @@ impl AgentWorkflow {
 
     // ─── Phase ParseAst : indexation AST de tout le dépôt cloné ───────────
 
-    async fn parse_repository(&self, st: &AgentState) -> Result<RepositoryIndex> {
+    async fn parse_repository(&self, st: &AgentState) -> Result<(RepositoryIndex, Vec<CodeChunk>)> {
         let repo_path = st.repo_path.clone().context("dépôt non cloné")?;
 
         let files = self.git_list_files(&repo_path).await?;
@@ -455,12 +548,40 @@ impl AgentWorkflow {
             symbol_summary.push_str(&format!("… (+{} autres symboles)\n", symbols.len() - 120));
         }
 
-        Ok(RepositoryIndex {
-            files,
-            node_count: merged.nodes.len(),
-            edge_count: merged.edges.len(),
-            symbol_summary,
-        })
+        // Chunks vectoriels : 1 chunk par symbole AST (borne de sûreté).
+        let chunks: Vec<CodeChunk> = merged
+            .nodes
+            .values()
+            .filter(|n| !n.name.is_empty() && n.name != "<anon>")
+            .take(MAX_VECTOR_CHUNKS)
+            .map(|n| {
+                let mut metadata = std::collections::HashMap::new();
+                metadata.insert("kind".to_string(), n.kind.clone());
+                metadata.insert("symbol".to_string(), n.name.clone());
+                CodeChunk {
+                    id: n.id.clone(),
+                    content: format!(
+                        "{} {} — {}:{}-{}",
+                        n.kind, n.name, n.file, n.start_line, n.end_line
+                    ),
+                    file: n.file.clone(),
+                    start_line: n.start_line,
+                    end_line: n.end_line,
+                    embedding: Vec::new(),
+                    metadata,
+                }
+            })
+            .collect();
+
+        Ok((
+            RepositoryIndex {
+                files,
+                node_count: merged.nodes.len(),
+                edge_count: merged.edges.len(),
+                symbol_summary,
+            },
+            chunks,
+        ))
     }
 
     // ─── Phase GenerateScript : boucle ReAct (LLM + ToolExecutor) ─────────
@@ -470,6 +591,7 @@ impl AgentWorkflow {
         st: &AgentState,
         index: &RepositoryIndex,
         feedback: Option<&ExecResult>,
+        vector_context: Option<&str>,
     ) -> Result<(String, String)> {
         let repo_path = st.repo_path.clone().context("dépôt non cloné")?;
         let tools = ToolExecutor::new(PathBuf::from(&repo_path));
@@ -496,6 +618,10 @@ impl AgentWorkflow {
                 truncate(&fb.stdout, MAX_FEEDBACK_CHARS),
                 truncate(&fb.stderr, MAX_FEEDBACK_CHARS),
             ));
+        }
+
+        if let Some(ctx) = vector_context {
+            user.push_str(&format!("\n\n{ctx}"));
         }
 
         let mut messages = vec![
@@ -608,6 +734,34 @@ impl AgentWorkflow {
     async fn llm_chat(&self, messages: Vec<Value>) -> Result<LlmResponse> {
         Self::rpc_call(&self.llm, move |reply| LlmMessage::Chat {
             messages,
+            reply: reply.into(),
+        })
+        .await
+    }
+
+    async fn vector_ingest(&self, chunks: Vec<CodeChunk>) -> Result<(usize, String)> {
+        let Some(vector) = self.vector.clone() else {
+            anyhow::bail!("index vectoriel désactivé");
+        };
+        Self::rpc_call(&vector, move |reply| VectorMessage::Ingest {
+            chunks,
+            reply: reply.into(),
+        })
+        .await
+    }
+
+    async fn vector_search(
+        &self,
+        query: &str,
+        top_k: usize,
+    ) -> Result<crate::actors::SearchOutcome> {
+        let Some(vector) = self.vector.clone() else {
+            anyhow::bail!("index vectoriel désactivé");
+        };
+        let query = query.to_owned();
+        Self::rpc_call(&vector, move |reply| VectorMessage::Search {
+            query,
+            top_k,
             reply: reply.into(),
         })
         .await
@@ -736,9 +890,11 @@ mod tests {
             ast_ref.clone(),
             llm_ref.clone(),
             sandbox_ref.clone(),
+            None,
             ws.clone(),
             0,
             true,
+            5,
         );
         let st = AgentState::new("bug".into(), "https://example.com/repo.git".into());
         let st = workflow.run(st, None).await.expect("workflow OK");
@@ -869,15 +1025,31 @@ mod tests {
         tokio::fs::create_dir_all(&ws).await.unwrap();
         let (git_ref, ast_ref, llm_ref, sandbox_ref) = spawn_actors(fake_url, &ws).await;
 
+        // 3bis. Index vectoriel complet hors ligne : embedder hash (dégradé,
+        //        marqué comme tel) + SQLite-vec en mémoire. Vérifie l'intégration
+        //        ingestion → recherche de bout en bout sans réseau.
+        let embedder = crate::services::embedder::make_embedder("", "", "", 384, 32);
+        let backend: std::sync::Arc<dyn crate::services::vector_store::VectorBackend> =
+            std::sync::Arc::new(
+                crate::services::vector_store::SqliteVecBackend::new(":memory:")
+                    .expect("SqliteVecBackend :memory:"),
+            );
+        let (vector_ref, _) =
+            ractor::Actor::spawn(None, crate::actors::VectorActor::new(embedder, backend), ())
+                .await
+                .expect("spawn VectorActor");
+
         // 4. Workflow complet.
         let workflow = AgentWorkflow::new(
             git_ref.clone(),
             ast_ref.clone(),
             llm_ref.clone(),
             sandbox_ref.clone(),
+            Some(vector_ref.clone()),
             ws.clone(),
             3,
             true,
+            5,
         );
         let st = AgentState::new(
             "add(2, 2) renvoie 5 au lieu de 4".into(),
@@ -904,11 +1076,32 @@ mod tests {
         assert_eq!(outcome.iteration, 0);
         assert!(!outcome.history.is_empty());
 
+        // RAG : le contexte vectoriel a bien été injecté (encoder=hash,
+        // recherche explicitement marquée dégradée dans l'historique).
+        assert!(
+            outcome.vector_context.is_some(),
+            "contexte vectoriel attendu (index actif)"
+        );
+        assert!(
+            outcome
+                .history
+                .iter()
+                .any(|l| l.contains("index vectoriel") && l.contains("encoder=")),
+            "ingestion vectorielle attendue dans l'historique : {:?}",
+            outcome.history
+        );
+        assert!(
+            outcome.history.iter().any(|l| l.contains("DÉGRADÉE")),
+            "recherche dégradée attendue (fallback hash) : {:?}",
+            outcome.history
+        );
+
         // Les ActorRef sont monomorphes : arrêts séparés par type de message.
         git_ref.stop(None);
         ast_ref.stop(None);
         llm_ref.stop(None);
         sandbox_ref.stop(None);
+        vector_ref.stop(None);
         let _ = std::fs::remove_dir_all(&base);
         let _ = std::fs::remove_dir_all(&ws);
     }

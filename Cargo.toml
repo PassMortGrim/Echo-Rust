@@ -44,8 +44,7 @@ tree-sitter-rust       = "0.21"
 # ── Graphe & Vector DB ─────────────────────────────────
 petgraph      = "0.6"
 cap-std       = "3"                                              # Préouverture de répertoires dans WASI (filesystem capacitaire)
-qdrant-client = "1.10"
-sqlite        = "0.36"
+rusqlite      = { version = "0.32", features = ["bundled"] }
 sqlite-vec    = "0.1"
 
 # ── Sandbox WebAssembly ────────────────────────────────
@@ -67,3 +66,4 @@ opt-level    = 3
 lto          = true
 codegen-units = 1
 strip        = true
+

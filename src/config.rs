@@ -88,17 +88,24 @@ pub struct LlmConfig {
     pub model: String,
     pub temperature: f32,
     pub max_tokens: u32,
+    /// Modèle d'embeddings OpenAI-compatible (ex. "nomic-embed-text" côté
+    /// LM Studio). Vide → fallback déterministe « hash » (tests/CI, hors
+    /// ligne, recherche explicitement marquée dégradée).
+    pub embeddings_model: String,
 }
 
 impl Default for LlmConfig {
     fn default() -> Self {
         Self {
             // Jamais de clé API en dur dans les défauts.
+            // Jamais de clé API en dur ici : uniquement ECHO_LLM__API_KEY (env,
+            // jamais committée dans config.toml).
             api_key: String::new(),
             base_url: "https://api.openai.com/v1".into(),
             model: "gpt-4-turbo-preview".into(),
             temperature: 0.2,
             max_tokens: 4096,
+            embeddings_model: String::new(),
         }
     }
 }
@@ -106,10 +113,18 @@ impl Default for LlmConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(default)]
 pub struct VectorDbConfig {
+    /// "sqlite" (défaut, locale via sqlite-vec), "qdrant" (serveur distant)
+    /// ou "off" pour désactiver l'indexation vectorielle.
     pub backend: String,
     pub qdrant_url: String,
     pub sqlite_path: String,
+    /// Dimension utilisée par le fallback hash (l'API auto-détecte la
+    /// sienne à la 1re réponse et la stocke en métadonnées de la base).
     pub embedding_dim: usize,
+    /// Taille des lots envoyés à l'API d'embeddings (limite les allers-retours).
+    pub batch_size: usize,
+    /// Nombre de résultats renvoyés par la recherche vectorielle.
+    pub top_k: usize,
 }
 
 impl Default for VectorDbConfig {
@@ -118,7 +133,9 @@ impl Default for VectorDbConfig {
             backend: "sqlite".into(),
             qdrant_url: "http://localhost:6333".into(),
             sqlite_path: "echo_vectors.db".into(),
-            embedding_dim: 1536,
+            embedding_dim: 384,
+            batch_size: 32,
+            top_k: 5,
         }
     }
 }
