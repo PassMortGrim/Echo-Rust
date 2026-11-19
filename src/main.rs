@@ -1,17 +1,9 @@
 //! Echo-Rust — point d'entrée principal.
 //!
 //! Orchestration : config → acteurs → services → workflow → TUI/CLI.
+//! La bibliothèque (lib.rs) est réutilisée par les tests d'intégration.
 
-// Prototype v0.2 : une partie de l'API (variantes de messages, services
-// vectoriels, exécution sandbox) est réservée à l'intégration prévue en v0.3.
-// dead_code est toléré tant que le câblage complet n'est pas effectué.
-#![allow(dead_code)]
-
-mod actors;
-mod config;
-mod services;
-mod state;
-mod tui;
+use echo_rust::{actors, config, services, state, tui};
 
 use anyhow::{Context, Result};
 use ractor::{Actor, ActorRef};
