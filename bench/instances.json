@@ -1,0 +1,49 @@
+{
+  "instances": [
+    {
+      "instance_id": "echo-rust-self-bench-offline",
+      "repo_url": "LOCAL:CARGO_MANIFEST_DIR",
+      "base_commit": null,
+      "language": "rust",
+      "issue": "print_issue est le marqueur de reproduction — générer un script qui affiche 'bug reproduit'",
+      "scripted_llm": [
+        "TOOL_CALL: list_files",
+        "SCRIPT: println!(\"bug reproduit\");"
+      ],
+      "expect": {
+        "exit_code": 0,
+        "stdout_contains": ["bug reproduit"]
+      },
+      "requires": ["local_repo"],
+      "ignore_reason": null
+    },
+    {
+      "instance_id": "fixture-python-add-bug",
+      "repo_url": "https://github.com/cedric626/echo-bench-fixture.git",
+      "base_commit": null,
+      "language": "python",
+      "issue": "add(2, 2) renvoie 5 au lieu de 4 dans app.py — donner un script de reproduction qui affiche 4",
+      "scripted_llm": null,
+      "expect": {
+        "exit_code": 0,
+        "stdout_contains": ["4"]
+      },
+      "requires": ["docker", "network", "llm"],
+      "ignore_reason": "Docker + réseau + clé LLM réels — résérvé nightly"
+    },
+    {
+      "instance_id": "echo-bench-fixture-rust",
+      "repo_url": "https://github.com/cedric626/echo-bench-fixture.git",
+      "base_commit": null,
+      "language": "rust",
+      "issue": "La fonction add de src/lib.rs renvoie a + b + 1 — script de reproduction qui affiche 4",
+      "scripted_llm": null,
+      "expect": {
+        "exit_code": 0,
+        "stdout_contains": ["4"]
+      },
+      "requires": ["network", "llm"],
+      "ignore_reason": "réseau + endpoint LLM réel — réservé nightly/manuel"
+    }
+  ]
+}

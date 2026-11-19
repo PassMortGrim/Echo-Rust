@@ -1,0 +1,44 @@
+name: SWE-bench-lite (nightly)
+
+# Harnais SWE-bench-lite : instances SWE-bench réelles = clonages réels,
+# Docker, LLM réel -> lourd et non déterministe. Réservé au nightly/manuel,
+# JAMAIS bloquant (continue-on-error + rapport en artefact).
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # 03:00 UTC chaque nuit
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  swebench-lite:
+    name: Real repos (nightly, never blocking)
+    runs-on: ubuntu-latest
+    continue-on-error: true # ⚠ Protocole : jamais bloquant
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Rust toolchain + cible wasm
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip1
+
+      - uses: Swatinem/rust-cache@v2
+
+      # Docker est préinstallé sur les runners ubuntu-latest (instances Python).
+      - name: Lancer le harnais complet (clones réels + LLM réel)
+        env:
+          # Clé LLM réelle si configurée ; sinon les instances "llm" sont SKIP.
+          ECHO_LLM__API_KEY: ${{ secrets.ECHO_LLM_API_KEY }}
+        run: cargo test --test swebench_lite -- --ignored --nocapture
+
+      - name: Publier le rapport (artefact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swebench-lite-report
+          path: bench/report.json
+          if-no-files-found: ignore
