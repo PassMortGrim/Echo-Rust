@@ -171,9 +171,17 @@ impl SqliteVecBackend {
             .context("suppression de l'ancienne table vec0")?;
         conn.execute_batch("DELETE FROM vector_meta;")
             .context("reset des métadonnées")?;
+        // Métadonnées en requête paramétrée : l'encoder peut contenir un nom
+        // de modèle arbitraire (config/env) — jamais interpolé en SQL.
+        conn.execute(
+            "INSERT INTO vector_meta(key, value) VALUES ('dim', ?1), ('encoder', ?2)",
+            rusqlite::params![dim.to_string(), encoder],
+        )
+        .context("écriture des métadonnées")?;
+        // La table vec0 n'accepte pas de paramètres : dim est un usize,
+        // sûr à formater.
         conn.execute_batch(&format!(
-            "INSERT INTO vector_meta(key, value) VALUES ('dim', '{dim}'), ('encoder', '{encoder}');
-             CREATE VIRTUAL TABLE chunks_vec USING vec0(embedding float[{dim}]);"
+            "CREATE VIRTUAL TABLE chunks_vec USING vec0(embedding float[{dim}]);"
         ))
         .context("création de la table vec0 (dimension mémorisée)")?;
         Ok(())
