@@ -1,19 +1,23 @@
 # syntax=docker/dockerfile:1
 
-FROM rust:1.83-bookworm AS planner
+FROM rust:1-bookworm AS planner
 WORKDIR /app
 RUN cargo install cargo-chef --locked
 COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
-FROM rust:1.83-bookworm AS builder
+FROM rust:1-bookworm AS builder
 WORKDIR /app
 RUN cargo install cargo-chef --locked
 COPY --from=planner /app/recipe.json recipe.json
-RUN cargo chef cook --release --recipe-path recipe.json
+# Montages de cache BuildKit : le cache par plateforme (amd64/arm64) rend
+# les rebuilds multi-arch beaucoup plus rapides.
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    cargo chef cook --release --recipe-path recipe.json
 
 COPY . .
-RUN cargo build --release --bin echo-rust
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    cargo build --release --bin echo-rust
 
 FROM debian:bookworm-slim AS runtime
 RUN apt-get update \

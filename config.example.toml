@@ -25,17 +25,27 @@ max_memory = 536870912      # 512 MB
 timeout_ms = 30000
 
 [llm]
-api_key     = "sk-..."
-base_url    = "https://api.openai.com/v1"
-model       = "gpt-4-turbo-preview"
+api_key     = ""           # NEVER commit a key — set ECHO_LLM__API_KEY env var
+///
+# JAMAIS de clé API committée — exportez ECHO_LLM__API_KEY à la place :
+#   PowerShell : $env:ECHO_LLM__API_KEY = "sk-..."
+#   bash       : export ECHO_LLM__API_KEY="sk-..."
+base_url         = "https://api.openai.com/v1"   # ou LM Studio : http://localhost:1234/v1
+model            = "gpt-4-turbo-preview"
+embeddings_model = ""         # ex. "nomic-embed-text" (LM Studio) ; vide = fallback hash
+# Endpoint embeddings : {base_url} + /embeddings (même client HTTP, même clé)
 temperature = 0.2
 max_tokens  = 4096
 
 [vector_db]
-backend       = "sqlite"    # "qdrant" | "sqlite"
+backend       = "sqlite"    # "sqlite" (défaut) | "qdrant" | "off"
 qdrant_url    = "http://localhost:6333"
 sqlite_path   = "echo_vectors.db"
-embedding_dim = 1536
+embedding_dim = 384         # dimension du FALLBACK hash uniquement ;
+                            # la dimension API est auto-détectée et persistée
+                            # en métadonnées (vector_meta) au 1er appel.
+batch_size    = 32          # chunks par appel /embeddings (batching)
+top_k         = 5           # résultats renvoyés par la recherche RAG
 
 [sandbox]
 mode            = "wasm"    # "wasm" | "docker"

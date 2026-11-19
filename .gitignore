@@ -2,3 +2,6 @@
 config.toml
 echo_vectors.db
 target/
+
+# Artefact de harnais SWE-bench-lite (généré, jamais committé)
+bench/report.json
