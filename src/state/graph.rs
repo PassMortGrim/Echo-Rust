@@ -105,9 +105,10 @@ const MAX_FEEDBACK_CHARS: usize = 1500;
 const SYSTEM_PROMPT: &str = "Tu es un agent de reproduction automatisée de bugs. \
 Tu peux explorer le dépôt cloné avec les outils fournis (grep_codebase, read_file, \
 write_file, list_files, execute_bash) avant de répondre. Ta réponse finale DOIT \
-contenir exactement un bloc de code clôturé (```python, ```javascript ou ```bash) : \
-un script auto-suffisant qui reproduit le bug décrit, sans interaction utilisateur, \
-affichant clairement le problème en sortie. Réponds en français.";
+contenir exactement un bloc de code clôturé : ```rust de préférence (le sandbox \
+WebAssembly l'exécute en isolation), sinon ```python, ```javascript ou ```bash \
+(exécution Docker durcie). Le script doit être auto-suffisant, sans interaction \
+utilisateur, et afficher clairement le problème en sortie. Réponds en français.";
 
 // ─── Helpers purs (testables sans acteurs) ────────────────────────────────
 
@@ -319,7 +320,10 @@ impl AgentWorkflow {
                 Phase::ExecuteSandbox => {
                     st.log("exécution dans le sandbox (SandboxActor)…");
                     let script = st.reproduction_script.clone().unwrap_or_default();
-                    match self.sandbox_execute(script, script_lang.clone()).await {
+                    match self
+                        .sandbox_execute(script, script_lang.clone(), st.repo_path.clone())
+                        .await
+                    {
                         Ok(exec) if exec.ok() => {
                             st.log(&format!(
                                 "script exécuté avec succès (exit {}, {} ms)",
@@ -609,10 +613,16 @@ impl AgentWorkflow {
         .await
     }
 
-    async fn sandbox_execute(&self, code: String, language: String) -> Result<ExecResult> {
+    async fn sandbox_execute(
+        &self,
+        code: String,
+        language: String,
+        repo_path: Option<String>,
+    ) -> Result<ExecResult> {
         Self::rpc_call(&self.sandbox, move |reply| SandboxMessage::Execute {
             code,
             language,
+            repo_path,
             reply: reply.into(),
         })
         .await
@@ -844,7 +854,7 @@ mod tests {
             json!({
                 "choices": [{ "message": {
                     "role": "assistant",
-                    "content": "Voici le script de reproduction :\n```python\nprint('bug reproduit')\n```"
+                    "content": "Voici le script de reproduction :\n```rust\nprintln!(\"bug reproduit\");\n```"
                 }}],
                 "usage": { "prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 5 }
             })
@@ -853,7 +863,8 @@ mod tests {
         .await;
 
         // 3. Acteurs réels (git, ast, llm pointé sur le faux serveur,
-        //    sandbox wasm trivial : pas de Docker requis en CI).
+        //    sandbox wasm réel : le script rust est compilé vers wasm32-wasip1
+        //    puis exécuté sous wasmtime — pas de Docker requis en CI).
         let ws = std::env::temp_dir().join(format!("echo-e2e-ws-{}", uuid::Uuid::new_v4()));
         tokio::fs::create_dir_all(&ws).await.unwrap();
         let (git_ref, ast_ref, llm_ref, sandbox_ref) = spawn_actors(fake_url, &ws).await;
@@ -886,7 +897,7 @@ mod tests {
         );
         assert_eq!(
             outcome.reproduction_script.as_deref(),
-            Some("print('bug reproduit')\n")
+            Some("println!(\"bug reproduit\");\n")
         );
         assert!(outcome.ast_nodes > 0, "AST réel attendu (> 0 nœuds)");
         assert!(outcome.repo_path.is_some());

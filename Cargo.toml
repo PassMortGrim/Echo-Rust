@@ -43,6 +43,7 @@ tree-sitter-rust       = "0.21"
 
 # ── Graphe & Vector DB ─────────────────────────────────
 petgraph      = "0.6"
+cap-std       = "3"                                              # Préouverture de répertoires dans WASI (filesystem capacitaire)
 qdrant-client = "1.10"
 sqlite        = "0.36"
 sqlite-vec    = "0.1"
